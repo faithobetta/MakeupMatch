@@ -1,0 +1,98 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: #f7f2f6;
+}
+
+:root{
+    --mainColor: #f069ca;
+    --secondaryColor: #f5c1d8;
+    --textColorWhite: #eee;
+    --textColorBlack: black;
+}
+
+.book-service-page {
+    max-width: 800px;
+    height: fit-content;
+    margin: 0 auto;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    padding: 80px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.booking-service{
+    display: block;
+    font-size: 20px;
+    padding: 20px;
+    width: 600px;
+    height: fit-content;
+    background-color:hsl(0, 10%, 86%);
+    margin-bottom: 40px;
+    text-decoration: none;
+
+}
+
+.total-price{
+    font-size: 19px;
+    text-align: center;
+    margin-left: 65%;
+    padding: 20px;
+    background-color:hsl(0, 10%, 86%);
+    width: 200px;
+    height: fit-content;
+}
+.add-service-book{
+    display: block;
+    padding: 10px 20px;
+    background-color: var(--mainColor);
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-service-book:hover{
+    background-color: var(--secondaryColor);
+}
+.booking-details {
+    margin-bottom: 20px;
+}
+
+.select-time, .select-date{
+    font-size: 20px;
+}
+.remove-service {
+    font-size: 16px;
+    background-color: red; 
+    color: white; 
+    border: none; 
+    padding: 5px 10px; 
+    margin-left: 30%; 
+    cursor: pointer; 
+    border-radius: 3px; 
+}
+
+.book-button {
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 50px;
+    margin-left: 250px;
+    margin-bottom: 40px;
+    background-color: var(--mainColor);
+    color: white;
+    font-size: 18px;   
+}
+  
+.book-button:hover {
+    background-color: var(--secondaryColor);
+}
+  

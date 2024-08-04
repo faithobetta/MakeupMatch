@@ -1,0 +1,89 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: #f7f2f6;
+}
+
+:root{
+    --mainColor: #f069ca;
+    --secondaryColor: #f5c1d8;
+    --textColorWhite: #eee;
+    --textColorBlack: black;
+}
+
+/* .profile-page {
+    margin-top: 100px;
+    margin-bottom: 100px;
+} */
+/* src/components/ProfilePage.css */
+.profile-page {
+    margin: 0 auto;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    max-width: 900px;
+    
+    padding: 30px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  
+  .profile-page h1 {
+    text-align: center;
+  }
+  
+  .profile-picture,
+  .brand-name,
+  .services,
+  .contact,
+  .address,
+  .file-upload {
+    margin-bottom: 20px;
+  }
+  
+  .profile-picture label,
+  .brand-name label,
+  .services label,
+  .contact label,
+  .address label,
+  .file-upload label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .profile-picture img,
+  .uploaded-files img,
+  .uploaded-files video {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .services .service {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .services .service input {
+    flex: 1;
+  }
+  
+  .services .service button {
+    flex: none;
+  }
+  .artistDashboardButton{
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: 350px;
+    margin-bottom: 20px;
+    background-color: var(--mainColor);
+    color: white;
+    font-size: 18px;   
+  }
