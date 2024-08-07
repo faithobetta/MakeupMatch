@@ -1,5 +1,6 @@
 import express from 'express';
 import authRoutes from './routes/auth.js';
+import reviewRoutes from './routes/review.js';
 import appointmentRoutes from './routes/appointment.js';
 import { db } from './db.js';
 import cors from 'cors';
@@ -9,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/appointment', appointmentRoutes);
+app.use('/api/review', reviewRoutes);
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to the database:', err);
