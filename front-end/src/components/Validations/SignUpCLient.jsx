@@ -23,7 +23,7 @@ function SignUpClient() {
     try {
       const response = await axios.post('http://localhost:5174/api/auth/signUpClient', data);
       if (response.status === 201) {
-        navigate('/');
+        navigate(`/${response.data.clientId}`);
       } else {
         console.error('Error:', response.data);
       }

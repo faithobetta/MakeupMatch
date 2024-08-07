@@ -21,8 +21,8 @@ export const SignUpClient = (req, res) => {
     const insertQuery = "INSERT INTO client SET ?";
     db.query(insertQuery, newUser, (err, result) => {
       if (err) return res.status(500).json(err);
-
-      return res.status(201).json({ message: 'client created successfully' });
+      const clientId = result.insertId;
+      return res.status(201).json({ message: "Client created successfully!", clientId });
     });
   });
 };

@@ -2,9 +2,9 @@
 import '../CSS-pages/Home.css';
 // import Img1 from './Img1.jpg';
 import makeup3 from './makeup3.webp';
-import Autocomplete from "react-google-autocomplete";
+import Map from './Map';
 import pexels1 from './pexels1.webp';
-import { useRef } from 'react';
+
 
 // import Search from './Search';
 
@@ -15,7 +15,7 @@ import { useRef } from 'react';
 // ];
 
 function MakeupMatch() {
-    const inputRef = useRef(null);
+   
     // const [filteredArtists, setFilteredArtists] = useState(artistsData);
 
     // const handleFilter = (filteredArtists) => {
@@ -35,20 +35,7 @@ function MakeupMatch() {
                     {/* <Search artists={artistsData} onFilter={handleFilter} /> */}
                 </div>
             </div>
-            <Autocomplete
-          style={{ width: '80vw', }}
-          ref={inputRef}
-          apiKey={"AIzaSyCXF6BlbNZbDMI715io9A-fjb92VgDZaNU"}
-          onPlaceSelected={(selected,) => {
-            console.log(selected);
-          }}
-          options={{
-            types: ["geocode", "establishment"],
-            componentRestrictions: { country: "ru" },
-          }}
-          language='en'
-
-        />
+         <Map/>
             <div className="home-section">
                 <h3>Highly Recommended</h3>
                 <div className="section">
