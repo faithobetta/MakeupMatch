@@ -1,7 +1,7 @@
 import express from 'express';
 import authRoutes from './routes/auth.js';
 import { db } from './db.js';
-import cors from "cors";
+import cors from 'cors';
 
 const app = express();
 app.use(cors());
@@ -14,6 +14,9 @@ db.connect((err) => {
     return;
   }
   console.log('Connected to the MySQL database.');
+});
+app.get('/api/test', (req, res) => {
+  res.status(200).json({ message: 'Test route working' });
 });
 
 app.listen(5174, () => {

@@ -9,29 +9,24 @@ CREATE TABLE Client (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-
--- Table: Artists
-CREATE TABLE Artist (
+CREATE TABLE Artist(
     Artist_id SERIAL PRIMARY KEY,
-    Service_id INT NOT NULL REFERENCES service(Service_id) ON DELETE CASCADE,
     Name VARCHAR(255) NOT NULL,
     Email VARCHAR(255) NOT NULL UNIQUE,
     Password VARCHAR(255) NOT NULL,
-    brandName VARCHAR(200) NOT NULL,
-    Address VARCHAR(200) NOT NULL,
-    ContactNumber VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table: Appointments
-CREATE TABLE Appointments (
-    appointment_id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES Users(user_id) ON DELETE CASCADE,
-    artist_id INT NOT NULL REFERENCES Artists(artist_id) ON DELETE CASCADE,
-    appointment_date TIMESTAMP NOT NULL,
-    status VARCHAR(10) CHECK (status IN ('pending', 'confirmed', 'completed', 'cancelled')),
+
+-- Table: Artists
+CREATE TABLE Artistdashboard (
+    service_id INT AUTO_INCREMENT PRIMARY KEY,
+    Artist_id INT NOT NULL REFERENCES Artist(Artist_id) ON DELETE CASCADE,
+    BrandName VARCHAR(200) NOT NULL,
+    Address VARCHAR(200) NOT NULL,
+    Fileurl VARCHAR(255) NOT NULL,
+    ContactNumber VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -47,32 +42,26 @@ CREATE TABLE Services (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Table: Appointments
+CREATE TABLE Booking (
+    Booking_id SERIAL PRIMARY KEY,
+    Artist_id INT NOT NULL REFERENCES Artist(Artist_id) ON DELETE CASCADE,
+    Client_id INT NOT NULL REFERENCES Client(Client_id) ON DELETE CASCADE,
+    Service_id INT NOT NULL REFERENCES Service(Service_id) ON DELETE CASCADE,
+    Booking_date DATETIME NOT NULL,
+    Comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Table: Reviews
 CREATE TABLE Reviews (
-    review_id SERIAL PRIMARY KEY,
-    appointment_id INT NOT NULL REFERENCES Appointments(appointment_id) ON DELETE CASCADE,
-    rating INT CHECK (rating BETWEEN 1 AND 5),
-    comment TEXT,
+    Review_id SERIAL PRIMARY KEY,
+    Artist_id INT NOT NULL REFERENCES Artist(Artist_id) ON DELETE CASCADE,
+    Client_id INT NOT NULL REFERENCES Client(Client_id) ON DELETE CASCADE,
+    Rating INT CHECK (rating BETWEEN 1 AND 5),
+    Comment TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table: Availabilities
-CREATE TABLE Availabilities (
-    availability_id SERIAL PRIMARY KEY,
-    artist_id INT NOT NULL REFERENCES Artists(artist_id) ON DELETE CASCADE,
-    day_of_week VARCHAR(10) CHECK (day_of_week IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')),
-    start_time TIME NOT NULL,
-    end_time TIME NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Table: Messages
-CREATE TABLE Messages (
-    message_id SERIAL PRIMARY KEY,
-    sender_id INT NOT NULL REFERENCES Users(user_id) ON DELETE CASCADE,
-    receiver_id INT NOT NULL REFERENCES Users(user_id) ON DELETE CASCADE,
-    content TEXT NOT NULL,
-    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);

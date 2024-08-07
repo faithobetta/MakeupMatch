@@ -1,129 +1,163 @@
-// import "../CSS-pages/ArtistDashboard.css";
-// import { useState } from 'react';
-// import { useNavigate } from "react-router-dom";
+import "../CSS-pages/ArtistDashboard.css";
+import { useState } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../../firebase";
+import axios from "axios";
 
-// function ArtistDashboard() {
-//     const navigate = useNavigate();
-//     const [profilePicture, setProfilePicture] = useState(null);
-//     const [brandName, setBrandName] = useState('');
-//     const [address, setAddress] = useState('');
-//     const [services, setServices] = useState([{ name: '', price: '', currency: 'USD' }]);
-//     const [contactNumber, setContactNumber] = useState('');
-//     const [uploadedFiles, setUploadedFiles] = useState([]);
+function ArtistDashboard() {
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const [profilePicture, setProfilePicture] = useState(null);
+    const [BrandName, setBrandName] = useState('');
+    const [Address, setAddress] = useState('');
+    const [Services, setServices] = useState([{ Service_name: '', Price: '', Duration: 0 }]);
+    const [ContactNumber, setContactNumber] = useState('');
+    const [uploadedFiles, setUploadedFiles] = useState([]);
 
-//     const handleProfilePictureChange = (e) => {
-//         setProfilePicture(URL.createObjectURL(e.target.files[0]));
-//     };
+    const handleProfilePictureChange = (e) => {
+        setProfilePicture(URL.createObjectURL(e.target.files[0]));
+    };
 
-//     const handleServiceChange = (index, field, value) => {
-//         const updatedServices = [...services];
-//         updatedServices[index][field] = value;
-//         setServices(updatedServices);
-//     };
+    const handleServiceChange = (index, field, value) => {
+        const updatedServices = [...Services];
+        updatedServices[index][field] = value;
+        setServices(updatedServices);
+    };
 
-//     const handleAddService = () => {
-//         setServices([...services, { name: '', price: '', currency: 'USD' }]);
-//     };
+    const handleAddService = () => {
+        setServices([...Services, { Service_name: '', Price: '', Duration: 0 }]);
+    };
 
-//     const handleRemoveService = (index) => {
-//         const updatedServices = services.filter((_, i) => i !== index);
-//         setServices(updatedServices);
-//     };
+    const handleRemoveService = (index) => {
+        const updatedServices = Services.filter((_, i) => i !== index);
+        setServices(updatedServices);
+    };
 
-//     const handleFileUpload = (e) => {
-//         const files = Array.from(e.target.files);
-//         setUploadedFiles([...uploadedFiles, ...files.map(file => URL.createObjectURL(file))]);
-//     };
+    const handleFileUpload = (e) => {
+        const files = Array.from(e.target.files);
+        setUploadedFiles([...uploadedFiles, ...files]);
+    };
 
-//     const handleSubmit = (e) => {
-//         e.preventDefault();
-//         const formData = {
-//             profilePicture,
-//             brandName,
-//             address,
-//             services,
-//             contactNumber,
-//             uploadedFiles,
-//         };
-//         console.log('Form Submitted:', formData);
-//         navigate('/makeup-artists-profile', { state: formData });
-//     };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
-//     return (
-//         <div className="profile-page">
-//             <h1>Makeup Artist Dashboard</h1>
+        // Check for any empty fields in services before proceeding
+        const hasEmptyServices = Services.some(service => !service.Service_name || !service.Price || !service.Duration);
+        if (hasEmptyServices) {
+            alert("Please fill out all fields for each service.");
+            return;
+        }
 
-//             <form onSubmit={handleSubmit}>
-//                 <div className="profile-picture">
-//                     <label>Profile Picture:</label>
-//                     <input type="file" accept="image/*" onChange={handleProfilePictureChange} />
-//                     {profilePicture && <img src={profilePicture} alt="Profile" width="100" />}
-//                 </div>
+        try {
+            // Upload files to Firebase and get URLs
+            const fileUploadPromises = uploadedFiles.map(async (file) => {
+                const storageRef = ref(storage, `images/${file.name}`);
+                await uploadBytes(storageRef, file);
+                return getDownloadURL(storageRef);
+            });
 
-//                 <div className="brand-name">
-//                     <label>Brand Name:</label>
-//                     <input type="text" value={brandName} onChange={(e) => setBrandName(e.target.value)} />
-//                 </div>
+            const Fileurl = await Promise.all(fileUploadPromises);
+            console.log(Fileurl);
 
-//                 <div className="address">
-//                     <label>Address:</label>
-//                     <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
-//                 </div>
+            // Send form data along with file URLs to the backend
+            const response = await axios.post("http://localhost:5174/api/auth/artist-dashboard", {
+                Artist_id: id,
+                BrandName,
+                Address,
+                Services,
+                ContactNumber,
+                Fileurl
+            });
 
-//                 <div className="services">
-//                     <label>Services:</label>
-//                     {services.map((service, index) => (
-//                         <div key={index} className="service">
-//                             <input
-//                                 type="text"
-//                                 placeholder="Service Name"
-//                                 value={service.name}
-//                                 onChange={(e) => handleServiceChange(index, 'name', e.target.value)}
-//                             />
-//                             <input
-//                                 type="text"
-//                                 placeholder="Price"
-//                                 value={service.price}
-//                                 onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
-//                             />
-//                             <select
-//                                 value={service.currency}
-//                                 onChange={(e) => handleServiceChange(index, 'currency', e.target.value)}
-//                             >
-//                                 <option value="USD">USD</option>
-//                                 <option value="GBP">GBP</option>
-//                             </select>
-//                             <button type="button" onClick={() => handleRemoveService(index)}>Remove</button>
-//                         </div>
-//                     ))}
-//                     <button className="add-service-book" type="button" onClick={handleAddService}>Add Service</button>
-//                 </div>
+            if (response.status === 201) {
+                console.log('Registration successful:', response.data);
+                navigate(`/makeupArtistsProfile/${id}`);
+            } else {
+                console.error('Error:', response.data);
+            }
+        } catch (error) {
+            console.error("Error registering:", error);
+        }
+    };
 
-//                 <div className="contact">
-//                     <label>Contact Number:</label>
-//                     <input type="text" value={contactNumber} onChange={(e) => setContactNumber(e.target.value)} />
-//                 </div>
+    return (
+        <div className="profile-page">
+            <h1>Makeup Artist Dashboard</h1>
 
-//                 <div className="file-upload">
-//                     <label>Upload Files (Pictures/Videos):</label>
-//                     <input type="file" multiple accept="image/*,video/*" onChange={handleFileUpload} />
-//                     <div className="uploaded-files">
-//                         {uploadedFiles.map((file, index) => (
-//                             <div key={index} className="uploaded-file">
-//                                 {file.endsWith('.mp4') ? (
-//                                     <video src={file} controls width="100" />
-//                                 ) : (
-//                                     <img src={file} alt={`Upload ${index}`} width="100" />
-//                                 )}
-//                             </div>
-//                         ))}
-//                     </div>
-//                 </div>
+            <form onSubmit={handleSubmit}>
+                <div className="profile-picture">
+                    <label>Profile Picture:</label>
+                    <input type="file" accept="image/*" onChange={handleProfilePictureChange} />
+                    {profilePicture && <img src={profilePicture} alt="Profile" width="100" />}
+                </div>
 
-//                 <button className="artistDashboardButton" type="submit">Submit</button>
-//             </form>
-//         </div>
-//     );
-// }
+                <div className="brand-name">
+                    <label>Brand Name:</label>
+                    <input type="text" value={BrandName} onChange={(e) => setBrandName(e.target.value)} required />
+                </div>
 
-// export default ArtistDashboard;
+                <div className="address">
+                    <label>Address:</label>
+                    <input type="text" value={Address} onChange={(e) => setAddress(e.target.value)} required />
+                </div>
+
+                <div className="services">
+                    <label>Services:</label>
+                    {Services.map((service, index) => (
+                        <div key={index} className="service">
+                            <input
+                                type="text"
+                                placeholder="Service Name"
+                                value={service.Service_name}
+                                onChange={(e) => handleServiceChange(index, 'Service_name', e.target.value)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Price"
+                                value={service.Price}
+                                onChange={(e) => handleServiceChange(index, 'Price', e.target.value)}
+                                required
+                            />
+                            <input
+                                type="number"
+                                placeholder="Duration"
+                                value={service.Duration}
+                                onChange={(e) => handleServiceChange(index, 'Duration', e.target.value)}
+                                required
+                            />
+                            <button type="button" onClick={() => handleRemoveService(index)}>Remove</button>
+                        </div>
+                    ))}
+                    <button className="add-service-book" type="button" onClick={handleAddService}>Add Service</button>
+                </div>
+
+                <div className="file-upload">
+                    <label>Upload Files (Pictures/Videos):</label>
+                    <input type="file" multiple accept="image/*,video/*" onChange={handleFileUpload} />
+                    <div className="uploaded-files">
+                        {uploadedFiles.map((file, index) => (
+                            <div key={index} className="uploaded-file">
+                                {file.type.startsWith('video') ? (
+                                    <video src={URL.createObjectURL(file)} controls width="100" />
+                                ) : (
+                                    <img src={URL.createObjectURL(file)} alt={`Upload ${index}`} width="100" />
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="contact">
+                    <label>Contact Number:</label>
+                    <input type="text" value={ContactNumber} onChange={(e) => setContactNumber(e.target.value)} required />
+                </div>
+
+                <button className="artistDashboardButton" type="submit">Submit</button>
+            </form>
+        </div>
+    );
+}
+
+export default ArtistDashboard;

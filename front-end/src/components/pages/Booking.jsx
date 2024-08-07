@@ -5,37 +5,51 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
+import axios from 'axios';
 
 const Booking = () => {
-    const { Name,
-        Email,
-        Password,
-        ProfilePicture,
-        BrandName,
-        Address,
-        Services,
-        UploadedFiles, 
-        ContactNumber } = useParams();
+    const { ArtistId, ClientId, ServiceId } = useParams();
     const navigate = useNavigate();
-
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState('10:00');
-    const [bookedServices, setBookedServices] = useState(initialBookedServices || [service]);
+    const [bookedServices, setBookedServices] = useState([]);
+    const [comment, setComment] = useState("");
 
     useEffect(() => {
-        if (service && !bookedServices.some(s => s.name === service.name)) {
-            setBookedServices(prevServices => [...prevServices, service]);
+        if (serviceId && !bookedServices.some(s => s.id === serviceId)) {
+            // Fetch service details from backend if needed
+            axios.get(`/Services/${serviceId}`).then(response => {
+                setBookedServices(prevServices => [...prevServices, response.data]);
+            });
         }
-    }, [service]);
+    }, [serviceId]);
 
     const handleBooking = () => {
-        const totalAmount = calculateTotalPrice();
-        const currency = bookedServices[0]?.currency || 'USD';
-        navigate('/payment', { state: { totalAmount, currency } });
+        const bookingDate = new Date(selectedDate);
+        const [hours, minutes] = selectedTime.split(':');
+        bookingDate.setHours(hours, minutes);
+
+        const bookingData = {
+            Artist_id: artistId,
+            Client_id: clientId,
+            Service_id: serviceId,
+            booking_date: bookingDate.toISOString(),
+            Comment: comment,
+        };
+
+        axios.post('/booking/book', bookingData)
+            .then(response => {
+                const totalAmount = calculateTotalPrice();
+                const currency = bookedServices[0]?.currency || 'USD';
+                navigate('/payment', { state: { totalAmount, currency } });
+            })
+            .catch(error => {
+                console.error("There was an error booking the service!", error);
+            });
     };
 
     const handleAddMoreService = () => {
-        navigate('/makeup-artists-profile', { state: { profilePicture, brandName, address, services, contactNumber, uploadedFiles, bookedServices } });
+        navigate('/makeup-artists-profile', { state: { bookedServices } });
     };
 
     const calculateTotalPrice = () => {
@@ -67,6 +81,10 @@ const Booking = () => {
                     onChange={setSelectedTime} 
                     value={selectedTime}
                 />
+            </div>
+            <div className="booking-details">
+                <label htmlFor="comment">Comment:</label>
+                <textarea id="comment" value={comment} onChange={(e) => setComment(e.target.value)}></textarea>
             </div>
             <div className="booked-services">
                 <ul>

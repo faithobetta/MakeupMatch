@@ -7,7 +7,9 @@ function MakeupArtistsProfile() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [data, setData] = useState(null);
-    const [imgData, setImgData] = useState([]);
+    const [imgData, setImgData] = useState([]); // Initialize as an empty array
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const handleBookService = () => {
         navigate('/booking');
@@ -18,21 +20,29 @@ function MakeupArtistsProfile() {
             const response = await axios.get(`http://localhost:5174/api/auth/fetchArtist/${id}`);
             console.log("Artist Data:", response.data);
             setData(response.data);
-            if (response.data.fileurls) {
+
+            // Process the Fileurl string to ensure it's a valid JSON array
+            if (response.data.Fileurl) {
+                const correctedUrlString = response.data.Fileurl.trim();
+
+                // Log the raw Fileurl string
+                console.log("Raw Fileurl:", correctedUrlString);
+
                 try {
-                    let cleanedFileUrls = response.data.fileurls.replace(/\\/g, '');
-                    if (!cleanedFileUrls.endsWith(']')) {
-                        cleanedFileUrls += '"]';
-                    }
-                    const parsedFileUrls = JSON.parse(cleanedFileUrls);
-                    console.log("Parsed File URLs:", parsedFileUrls);
-                    setImgData(parsedFileUrls);
-                } catch (parseError) {
-                    console.error("Error parsing fileurls:", parseError);
+                    // Parse the corrected Fileurl string
+                    const urls = JSON.parse(correctedUrlString);
+                    setImgData(urls); // Set the image data as an array
+                    console.log("Image URLs:", urls); // Log to confirm
+                } catch (jsonError) {
+                    console.error("Error parsing Fileurl:", jsonError);
+                    setError("Error processing image URLs.");
                 }
             }
         } catch (error) {
             console.error("Error fetching artist:", error);
+            setError("Error fetching artist data. Please try again later.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -43,33 +53,36 @@ function MakeupArtistsProfile() {
     return (
         <div className="makeup-artists-profile">
             <h1>Makeup Artist Profile</h1>
-            {imgData && <img className="profile-img" src={imgData[0]} alt="Profile" />}
-            {data ? (
+            {loading ? (
+                <p>Loading...</p>
+            ) : error ? (
+                <p>{error}</p>
+            ) : data ? (
                 <>
-                    <h2>{data.Name}</h2>
+                    {imgData.length > 0 && <img className="profile-img" src={imgData[0]} alt="Profile" />}
+                    <h2>{data.BrandName}</h2>
                     <div className="div-address">
                         <p>{data.Address}</p>
                     </div>
                     <div className="div-service">
                         <h3>Services We Offer</h3>
                         <ul>
-                            {data.Services?.map((service, index) => (
-                                <li key={index} className="service-item">
-                                    {service.Service_name}: £{service.Price} {service.Duration}
+                            {data.Services?.map((service) => (
+                                <li key={service.Service_id} className="service-item">
+                                    {service.Service_name}: £{service.Price} for {service.Duration} minutes
                                     <button className="book" onClick={handleBookService}>Book service</button>
                                 </li>
                             ))}
                         </ul>
                     </div>
                     <div className="work-pictures">
-                        <h3>Pictures and videos of our work</h3>
+                        <h3>Pictures and Videos of Our Work</h3>
                         <div className="grid-layout">
-                        {imgData?.map((url, index) => (
+                            {imgData.map((url, index) => (
                                 <div key={index} className="grid-item">
-                                    <img src={url} alt={`Upload ${index}`} width="100" />
+                                    <img src={url} alt={`Upload ${index}`} width="500" height="400" />
                                 </div>
                             ))}
-                            
                         </div>
                     </div>
                     <div className="div-contact">
@@ -78,7 +91,7 @@ function MakeupArtistsProfile() {
                     </div>
                 </>
             ) : (
-                <p>Loading...</p>
+                <p>No artist data found.</p>
             )}
         </div>
     );

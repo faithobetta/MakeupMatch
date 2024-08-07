@@ -15,6 +15,7 @@ import Booking from "./components/pages/Booking";
 import About from "./components/Footer-pages/About"
 import Privacy from "./components/Footer-pages/Privacy"
 import Footer from "./components/Footer-pages/Footer";
+import ArtistDashboard from './components/pages/ArtistDashboard';
 
 
 
@@ -57,6 +58,10 @@ function App() {
           element: <SignUpArtist/>,
         },
         
+        {
+          path: "/artist-dashboard/:id",
+          element: <ArtistDashboard/>,
+        },
         {
           path: "/makeupArtistsProfile/:id",
           element: <MakeupArtistsProfile/>,
