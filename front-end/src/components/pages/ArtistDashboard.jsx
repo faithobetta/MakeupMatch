@@ -11,6 +11,7 @@ function ArtistDashboard() {
     const [profilePicture, setProfilePicture] = useState(null);
     const [BrandName, setBrandName] = useState('');
     const [Address, setAddress] = useState('');
+    const [Location, setLocation] = useState('');
     const [Services, setServices] = useState([{ Service_name: '', Price: '', Duration: 0 }]);
     const [ContactNumber, setContactNumber] = useState('');
     const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -65,6 +66,7 @@ function ArtistDashboard() {
                 Artist_id: id,
                 BrandName,
                 Address,
+                Location,
                 Services,
                 ContactNumber,
                 Fileurl
@@ -99,8 +101,53 @@ function ArtistDashboard() {
 
                 <div className="address">
                     <label>Address:</label>
-                    <input type="text" value={Address} onChange={(e) => setAddress(e.target.value)} required />
+                    <input type="text" value={Address} onChange={(e) => setAddress(e.target.value)} />
                 </div>
+
+                <div className="address">
+                    <label htmlFor="location">Location:</label>
+                    <select 
+                        id="location" 
+                        value={Location} 
+                        onChange={(e) => setLocation(e.target.value)} 
+                        required
+                    >
+                        <option value="" disabled>Select a location</option>
+                        <option value="barking_dagenham">Barking and Dagenham</option>
+                        <option value="barnet">Barnet</option>
+                        <option value="bexley">Bexley</option>
+                        <option value="brent">Brent</option>
+                        <option value="bromley">Bromley</option>
+                        <option value="camden">Camden</option>
+                        <option value="croydon">Croydon</option>
+                        <option value="ealing">Ealing</option>
+                        <option value="enfield">Enfield</option>
+                        <option value="greenwich">Greenwich</option>
+                        <option value="hackney">Hackney</option>
+                        <option value="hammersmith_fulham">Hammersmith and Fulham</option>
+                        <option value="haringey">Haringey</option>
+                        <option value="harrow">Harrow</option>
+                        <option value="havering">Havering</option>
+                        <option value="hillingdon">Hillingdon</option>
+                        <option value="hounslow">Hounslow</option>
+                        <option value="islington">Islington</option>
+                        <option value="kensington_chelsea">Kensington and Chelsea</option>
+                        <option value="kingston_upon_thames">Kingston upon Thames</option>
+                        <option value="lambeth">Lambeth</option>
+                        <option value="lewisham">Lewisham</option>
+                        <option value="merton">Merton</option>
+                        <option value="newham">Newham</option>
+                        <option value="redbridge">Redbridge</option>
+                        <option value="richmond_upon_thames">Richmond upon Thames</option>
+                        <option value="southwark">Southwark</option>
+                        <option value="sutton">Sutton</option>
+                        <option value="tower_hamlets">Tower Hamlets</option>
+                        <option value="waltham_forest">Waltham Forest</option>
+                        <option value="wandsworth">Wandsworth</option>
+                        <option value="westminster">Westminster</option>
+                    </select>
+                </div>
+
 
                 <div className="services">
                     <label>Services:</label>

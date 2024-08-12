@@ -25,6 +25,7 @@ CREATE TABLE Artistdashboard (
     Artist_id INT NOT NULL REFERENCES Artist(Artist_id) ON DELETE CASCADE,
     BrandName VARCHAR(200) NOT NULL,
     Address VARCHAR(200) NOT NULL,
+    Location VARCHAR(200) NOT NULL,
     Fileurl VARCHAR(255) NOT NULL,
     ContactNumber VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

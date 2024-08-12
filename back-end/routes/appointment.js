@@ -4,7 +4,7 @@ import { bookAppointment, cancelAppointment, fetchAllAppointments } from '../con
 
 const router = express.Router();
 
-router.post('/book', bookAppointment);
+router.post('/booking', bookAppointment);
 router.get('/appointments', fetchAllAppointments);
 router.delete('/appointments/:Booking_id', cancelAppointment);
 

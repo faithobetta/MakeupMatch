@@ -53,8 +53,9 @@ const newArtistDashboard = {
   Artist_id: artistId,
   BrandName: req.body.BrandName,
   Address: req.body.Address,
+  Location: req.body.Location,
   ContactNumber: req.body.ContactNumber,
-  Fileurl: JSON.stringify(req.body.Fileurl) // Ensure Fileurl is a valid JSON string
+  Fileurl: JSON.stringify(req.body.Fileurl) 
 };
 // console.log("New Artist Dashboard Data:", newArtistDashboard);
 
@@ -62,13 +63,14 @@ const newArtistDashboard = {
 
   // Insert new artist dashboard details into the database
   const insertArtistDashboardQuery = `
-    INSERT INTO Artistdashboard (Artist_id, BrandName, Address, ContactNumber, Fileurl) 
-    VALUES (?, ?, ?, ?, ?)`;
+    INSERT INTO Artistdashboard (Artist_id,  BrandName, Address, Location, ContactNumber, Fileurl) 
+    VALUES (?, ?, ?, ?, ?, ?)`;
 
   db.query(insertArtistDashboardQuery, [
     newArtistDashboard.Artist_id,
     newArtistDashboard.BrandName,
     newArtistDashboard.Address,
+    newArtistDashboard.Location,
     newArtistDashboard.ContactNumber,
     newArtistDashboard.Fileurl
   ], (err, result) => {
@@ -117,6 +119,7 @@ export const fetchArtistById = (req, res) => {
           a.Artist_id, 
           ad.BrandName, 
           ad.Address, 
+          ad.Location, 
           ad.ContactNumber, 
           ad.Fileurl,
           a.created_at, 
@@ -157,6 +160,7 @@ export const fetchArtistById = (req, res) => {
           Artist_id: data[0].Artist_id,
           BrandName: data[0].BrandName,
           Address: data[0].Address,
+          Location: data[0].Location,
           ContactNumber: data[0].ContactNumber,
           Fileurl: fileUrls,
           created_at: data[0].created_at,

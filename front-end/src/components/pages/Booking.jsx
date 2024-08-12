@@ -8,7 +8,7 @@ import 'react-time-picker/dist/TimePicker.css';
 import axios from 'axios';
 
 const Booking = () => {
-    const { ArtistId, ClientId, ServiceId } = useParams();
+    const { artistId, clientId, serviceId } = useParams();
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState('10:00');
@@ -16,44 +16,47 @@ const Booking = () => {
     const [comment, setComment] = useState("");
 
     useEffect(() => {
-        if (serviceId && !bookedServices.some(s => s.id === serviceId)) {
+        if (serviceId && !bookedServices.some(s => s.Service_id === parseInt(serviceId))) {
             // Fetch service details from backend if needed
-            axios.get(`/Services/${serviceId}`).then(response => {
+            axios.get(`http://localhost:5174/api/services/${serviceId}`).then(response => {
                 setBookedServices(prevServices => [...prevServices, response.data]);
+            }).catch(error => {
+                console.error("Error fetching service details:", error);
             });
         }
-    }, [serviceId]);
+    }, [serviceId, bookedServices]);
 
-    const handleBooking = () => {
+    const handleBooking = async() => {
         const bookingDate = new Date(selectedDate);
         const [hours, minutes] = selectedTime.split(':');
         bookingDate.setHours(hours, minutes);
 
         const bookingData = {
-            Artist_id: artistId,
-            Client_id: clientId,
-            Service_id: serviceId,
-            booking_date: bookingDate.toISOString(),
+            Artist_id: parseInt(artistId),
+            Client_id: parseInt(clientId),
+            Service_id: parseInt(serviceId),
+            Booking_date: bookingDate.toISOString(),
             Comment: comment,
         };
+        
 
-        axios.post('/booking/book', bookingData)
-            .then(response => {
-                const totalAmount = calculateTotalPrice();
-                const currency = bookedServices[0]?.currency || 'USD';
-                navigate('/payment', { state: { totalAmount, currency } });
-            })
-            .catch(error => {
-                console.error("There was an error booking the service!", error);
-            });
+        try {
+            const response = await axios.post('http://localhost:5174/api/booking', bookingData);
+            console.log("Booking response:", response.data);
+            const totalAmount = calculateTotalPrice();
+            const currency = bookedServices[0]?.currency || '£';
+            navigate('/payment', { state: { totalAmount, currency } });
+        } catch (error) {
+            console.error("There was an error booking the service!", error);
+        }
     };
 
     const handleAddMoreService = () => {
-        navigate('/makeup-artists-profile', { state: { bookedServices } });
+        navigate('/makeupArtistsProfile', { state: { bookedServices } });
     };
 
     const calculateTotalPrice = () => {
-        return bookedServices.reduce((total, service) => total + parseFloat(service.price || 0), 0).toFixed(2);
+        return bookedServices.reduce((total, service) => total + parseFloat(service.Price || 0), 0).toFixed(2);
     };
 
     const handleRemoveService = (index) => {
@@ -90,7 +93,7 @@ const Booking = () => {
                 <ul>
                     {bookedServices.map((service, index) => (
                         <li className="booking-service" key={index}>
-                            {service.name}: {service.price} {service.currency}
+                            {service.Service_name}: {service.Price} {service.currency}
                             <button className="remove-service" onClick={() => handleRemoveService(index)}>Remove</button>
                         </li>
                     ))}

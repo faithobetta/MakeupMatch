@@ -2,7 +2,8 @@
 import '../CSS-pages/Home.css';
 // import Img1 from './Img1.jpg';
 import makeup3 from './makeup3.webp';
-import Map from './Map';
+// import Map from './Map';
+import Search from './Search';
 import pexels1 from './pexels1.webp';
 
 
@@ -35,7 +36,8 @@ function MakeupMatch() {
                     {/* <Search artists={artistsData} onFilter={handleFilter} /> */}
                 </div>
             </div>
-         <Map/>
+            <Search/>
+         {/* <Map/> */}
             <div className="home-section">
                 <h3>Highly Recommended</h3>
                 <div className="section">
