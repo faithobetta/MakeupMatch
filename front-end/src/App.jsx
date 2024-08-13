@@ -16,6 +16,7 @@ import About from "./components/Footer-pages/About"
 import Privacy from "./components/Footer-pages/Privacy"
 import Footer from "./components/Footer-pages/Footer";
 import ArtistDashboard from './components/pages/ArtistDashboard';
+import Artist from './components/pages/Artist';
 
 
 
@@ -57,7 +58,10 @@ function App() {
           path: "/signUpArtist",
           element: <SignUpArtist/>,
         },
-        
+        {
+          path: "/artist",
+          element: <Artist/>,
+        },
         {
           path: "/artist-dashboard/:id",
           element: <ArtistDashboard/>,

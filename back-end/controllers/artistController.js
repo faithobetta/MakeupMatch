@@ -184,3 +184,73 @@ export const fetchArtistById = (req, res) => {
       return res.status(200).json(artist);
   });
 };
+
+
+// Fetch artists by location
+export const fetchArtistsByLocation = (req, res) => {
+  const location = req.params.location;
+
+  if (!location) {
+    return res.status(400).json("Location is required");
+  }
+
+  const query = `
+    SELECT 
+      a.Artist_id, 
+      ad.BrandName, 
+      ad.Address, 
+      ad.Location, 
+      ad.ContactNumber, 
+      ad.Fileurl,
+      a.created_at, 
+      a.updated_at,
+      GROUP_CONCAT(
+        JSON_OBJECT(
+          'Service_id', s.Service_id,
+          'Service_name', s.Service_name,
+          'Price', s.Price,
+          'Duration', s.Duration,
+          'created_at', s.created_at,
+          'updated_at', s.updated_at
+        ) ORDER BY s.Service_id
+      ) AS Services
+    FROM Artist a
+    LEFT JOIN Artistdashboard ad ON a.Artist_id = ad.Artist_id
+    LEFT JOIN Services s ON a.Artist_id = s.Artist_id
+    WHERE ad.Location = ?
+    GROUP BY a.Artist_id
+  `;
+
+  db.query(query, [location], (err, data) => {
+    if (err) {
+      return res.status(500).json(err);
+    }
+
+    if (data.length === 0) {
+      return res.status(404).json("No artists found in this location");
+    }
+
+    const artists = data.map(artist => {
+      let services = [];
+      try {
+        services = artist.Services ? JSON.parse(`[${artist.Services}]`) : [];
+      } catch (parseError) {
+        console.error("Error parsing services JSON:", parseError);
+      }
+
+      return {
+        Artist_id: artist.Artist_id,
+        BrandName: artist.BrandName,
+        Address: artist.Address,
+        Location: artist.Location,
+        ContactNumber: artist.ContactNumber,
+        Fileurl: artist.Fileurl,
+        created_at: artist.created_at,
+        updated_at: artist.updated_at,
+        Services: services
+      };
+    });
+
+    return res.status(200).json(artists);
+  });
+};

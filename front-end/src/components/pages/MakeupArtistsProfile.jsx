@@ -8,7 +8,7 @@ function MakeupArtistsProfile() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [data, setData] = useState(null);
-    const [imgData, setImgData] = useState([]); // Initialize as an empty array
+    const [imgData, setImgData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [reviews, setReviews] = useState([]);
@@ -18,9 +18,42 @@ function MakeupArtistsProfile() {
     const [newComment, setNewComment] = useState("");
     const [postingReview, setPostingReview] = useState(false);
     const [postReviewError, setPostReviewError] = useState(null);
+    const [latitude, setLatitude] = useState(0);
+    const [longitude, setLongitude] = useState(0);
 
-    const handleBookService = () => {
-        navigate('/booking');
+    const locationCoordinates = {
+        barking_dagenham: { lat: 51.5607, lng: 0.1557 },
+        barnet: { lat: 51.6538, lng: -0.2003 },
+        bexley: { lat: 51.4550, lng: 0.1660 },
+        brent: { lat: 51.5588, lng: -0.2817 },
+        bromley: { lat: 51.4050, lng: 0.0146 },
+        camden: { lat: 51.5290, lng: -0.1255 },
+        croydon: { lat: 51.3762, lng: -0.0982 },
+        ealing: { lat: 51.5136, lng: -0.3084 },
+        enfield: { lat: 51.6521, lng: -0.0812 },
+        greenwich: { lat: 51.4821, lng: 0.0057 },
+        hackney: { lat: 51.5450, lng: -0.0550 },
+        hammersmith_fulham: { lat: 51.4927, lng: -0.2334 },
+        haringey: { lat: 51.5908, lng: -0.1098 },
+        harrow: { lat: 51.5792, lng: -0.3330 },
+        havering: { lat: 51.5590, lng: 0.2187 },
+        hillingdon: { lat: 51.5333, lng: -0.4584 },
+        hounslow: { lat: 51.4746, lng: -0.3455 },
+        islington: { lat: 51.5380, lng: -0.1024 },
+        kensington_chelsea: { lat: 51.4975, lng: -0.1940 },
+        kingston_upon_thames: { lat: 51.4123, lng: -0.3007 },
+        lambeth: { lat: 51.4607, lng: -0.1167 },
+        lewisham: { lat: 51.4416, lng: -0.0117 },
+        merton: { lat: 51.4155, lng: -0.1886 },
+        newham: { lat: 51.5076, lng: 0.0460 },
+        redbridge: { lat: 51.5898, lng: 0.0817 },
+        richmond_upon_thames: { lat: 51.4510, lng: -0.3067 },
+        southwark: { lat: 51.5035, lng: -0.0804 },
+        sutton: { lat: 51.3618, lng: -0.1942 },
+        tower_hamlets: { lat: 51.5097, lng: -0.0175 },
+        waltham_forest: { lat: 51.5908, lng: -0.0118 },
+        wandsworth: { lat: 51.4576, lng: -0.1933 },
+        westminster: { lat: 51.4975, lng: -0.1357 },
     };
 
     const fetchArtistById = async () => {
@@ -29,13 +62,21 @@ function MakeupArtistsProfile() {
             console.log("Artist Data:", response.data);
             setData(response.data);
 
+            const location = response.data.Location.toLowerCase().replace(' ', '_');
+            if (locationCoordinates[location]) {
+                const { lat, lng } = locationCoordinates[location];
+                setLatitude(lat);
+                setLongitude(lng);
+                console.log("Latitude:", lat, "Longitude:", lng);
+            } else {
+                console.error("Location not found in the coordinates array");
+            }
+
             if (response.data.Fileurl) {
                 const correctedUrlString = response.data.Fileurl.trim();
-
                 console.log("Raw Fileurl:", correctedUrlString);
 
                 try {
-                    
                     const urls = JSON.parse(correctedUrlString);
                     setImgData(urls); 
                     console.log("Image URLs:", urls); 
@@ -113,7 +154,7 @@ function MakeupArtistsProfile() {
                             {data.Services?.map((service) => (
                                 <li key={service.Service_id} className="service-item">
                                     {service.Service_name}: £{service.Price} for {service.Duration} minutes
-                                    <button className="book" onClick={handleBookService}>Book service</button>
+                                    <button className="book" onClick={() => navigate('/booking')}>Book service</button>
                                 </li>
                             ))}
                         </ul>
@@ -131,7 +172,6 @@ function MakeupArtistsProfile() {
                     <div className="div-contact">
                         <h3>Contact Number</h3>
                         <p>{data.ContactNumber}</p>
-                        
                     </div>
 
                     <div className="reviews-section">
@@ -152,41 +192,36 @@ function MakeupArtistsProfile() {
                         ) : (
                             <p>No reviews yet.</p>
                         )}
-                    </div>
 
-                    <div className="post-review-section">
-                        <h3>Leave a Review</h3>
                         <form onSubmit={handlePostReview}>
-                            <label className="rating">
+                            <h3>Leave a Review</h3>
+                            <label>
                                 Rating:
-                                <select className="rate" value={newRating} onChange={(e) => setNewRating(Number(e.target.value))}>
+                                <select value={newRating} onChange={(e) => setNewRating(parseInt(e.target.value))}>
                                     {[1, 2, 3, 4, 5].map((rating) => (
                                         <option key={rating} value={rating}>{rating}</option>
                                     ))}
                                 </select>
-                            </label> <br />
-                            <label className="comment">
+                            </label>
+                            <label>
                                 Comment:
-                                <textarea className="text"
-                                    value={newComment}
-                                    onChange={(e) => setNewComment(e.target.value)}
-                                    required
-                                ></textarea>
-                            </label><br />
-                            <button className="review-button" type="submit" disabled={postingReview}>Submit Review</button>
-                            {postReviewError && <p>{postReviewError}</p>}
+                                <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} required />
+                            </label>
+                            <button type="submit" disabled={postingReview}>
+                                {postingReview ? 'Posting...' : 'Post Review'}
+                            </button>
+                            {postReviewError && <p className="error">{postReviewError}</p>}
                         </form>
                     </div>
-                    <div className="map-div">
-                        <Map className="map"/>
+
+                    <div className="map-container">
+                        <h3>Location</h3>
+                        <Map latitude={latitude} longitude={longitude} />
                     </div>
-                    
                 </>
             ) : (
-                <p>No artist data found.</p>
+                <p>Artist not found.</p>
             )}
-           
-            
         </div>
     );
 }
