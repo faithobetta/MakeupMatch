@@ -20,13 +20,13 @@ body{
     margin-bottom: 60px;
     width: 400px;
     height: auto;
-    padding: 20px;
+    padding: 40px;
     background: var(--mainColor);
     border-radius: 20px;
     
 }
 .login-container h2{
-    padding: 30px 0px 30px 0px;
+    padding-bottom: 30px;
     color: var(--textColorWhite);
     text-align: center;
 }
@@ -82,13 +82,13 @@ body{
 }
 .login-account .signup{
     display: inline-block;
-    margin-left: 20%;
     background-color: var(--textColorWhite);
     color: var(--textColorBlack);
     text-align: center;
     height: 40px;
     width: 250px;
     padding: 8px 20px;
+    margin-left: 30px;
     border-radius: 5px;
     font-size: 1.2rem;
     margin-top: 8px;

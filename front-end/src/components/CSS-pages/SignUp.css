@@ -13,73 +13,99 @@ body{
     --textColorWhite: #eee;
     --textColorBlack: black;
 }
-.signUp-home{
+
+.signUp-home {
     font-size: 1.2rem;
-    margin: auto;
-    margin-top: 150px;
-    margin-bottom: 60px;
-    width: 500px;
-    height: 450px;
+    margin: 150px auto 80px auto;
+    width: 600px;
     background: var(--mainColor);
     border-radius: 20px;
+    padding: 40px;
 }
 
 .signUp-home h2{
-    padding: 40px 0px 40px 0px;
+    padding-bottom: 40px;
     color: var(--textColorWhite);
     text-align: center;
-
 }
 
-input{
-    display: flex;
-    justify-content: center;
+
+
+input {
+    display: block;
     font-size: 1.4rem;
-    flex-wrap: wrap;
-    width: 400px;
+    width: 80%;
     height: 40px;
     border-radius: 10px;
-    margin-left: 10%;
+    margin: 10px auto;
     border: none;
-    background-color: ;
+    padding: 5px 10px;
 }
 .error-text{
     color:red;
     padding-left: 10%;
+    font-size: 0.9rem;
 }
-
-.submit{
-    margin-left: 35%;
-    width: 150px;
-    background-color: var(--textColorWhite);
-    color: var(--white);
-    padding: 5px 5px;
+.submit {
+    display: block;
+    margin: 20px auto;
+    width: 50%;
+    max-width: 200px;
+    padding: 10px 0;
     border: none;
     border-radius: 30px;
     font-size: 1.2rem;
-    margin-top: 15px;
     transition: .5s;
     cursor: pointer;
+    text-align: center;
 }
 
+.submit:hover{
+    background-color: var(--secondaryColor);
+}
+
+/* Media Queries */
 @media (max-width: 768px) {
     .signUp-home {
-        margin: 50px auto; /* Reduce top and bottom margin on smaller devices */
-        width: 80%; /* Use a higher percentage of the screen width */
+        margin: 50px auto; 
+        width: 80%; 
+    }
+
+    input {
+        width: 90%;
+    }
+}
+
+@media (max-width: 600px) and (min-width: 481px) {
+    .signUp-home {
+        width: 80%; 
+        margin: 40px auto; 
+    }
+
+    input {
+        width: 90%; 
+        font-size: 1.3rem; 
+    }
+
+    .submit {
+        width: 50%; 
+        font-size: 1.1rem;
     }
 }
 
 @media (max-width: 480px) {
     .signUp-home {
-        margin: 20px auto; /* Further reduce margin for very small devices */
-        width: 65%; /* Use even more of the screen width */
-    }
-    input{
-        width: 80%;
+        width: 80%; 
     }
 
-    .signUp-home button {
-        width: auto; /* Allow the button to expand as needed */
-        padding: 5px 30px; /* Increase padding for a wider button */
+    input {
+        width: 90%; 
+        font-size: 1.2rem; 
+    }
+
+    .submit {
+        width: 50%; 
+        font-size: 1.1rem;
+        padding: 10px;
     }
 }
