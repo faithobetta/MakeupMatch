@@ -19,7 +19,8 @@ body{
     margin-top: 150px;
     margin-bottom: 60px;
     width: 400px;
-    height: 450px;
+    height: auto;
+    padding: 20px;
     background: var(--mainColor);
     border-radius: 20px;
     
@@ -38,7 +39,9 @@ body{
 }
 
 .login-input{
-    width: 250px;
+    /* width: 250px; */
+    width: 100%;
+    max-width: 250px;
     height: 40px;
     margin-bottom: 20px;
     border-radius: 10px;
@@ -48,38 +51,44 @@ body{
 
 .login-container p{
     font-size: 1.2rem;
+    color: var(--textColorWhite);
+    text-align: center;
+    margin-top: 10px;
 }
 .login-container .forgot-link{
     margin-left: 46%;
-    font-size: 1.2rem; 
-}
-.login-container button{
-    margin-left: 30%;
-    width: 150px;
-    background-color: var(--textColorWhite);
-    color: var(--white);
-    padding: 5px 5px;
-    border: none;
-    border-radius: 30px;
     font-size: 1.2rem;
-    margin-top: 8px;
+    display: block;
+    font-size: 1.2rem;
+}
+.login-container button {
+    display: block;
+    width: 150px;
+    margin: 5px auto;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2rem;
     transition: .5s;
+    cursor: pointer;
+}
+.login-container button:hover{
+    background-color: var(--secondaryColor);
 }
 
 .login-container p{
-    color: var(--textColorWhite);
     padding: 10px;
+    text-align: center;
 }
 .login-account .signup{
-    display: block;
+    display: inline-block;
     margin-left: 20%;
     background-color: var(--textColorWhite);
     color: var(--textColorBlack);
     text-align: center;
     height: 40px;
     width: 250px;
-    padding: 8px 0px 0px 0px;
-    border: none;
+    padding: 8px 20px;
     border-radius: 5px;
     font-size: 1.2rem;
     margin-top: 8px;
@@ -87,24 +96,98 @@ body{
 }
 
 .login-account a:hover{
-    /* background-color: var(--purple); */
-    /* color: var(--white);  */
+    background-color: var(--secondaryColor); 
 }
 
 /* Media Queries */
 @media (max-width: 768px) {
     .login-container {
-        margin: 50px 20px;
+        margin: 50px auto;
+        width: 50%;
     }
 
-    .login-account a {
-        width: 170px;
+    .login-input {
+        margin-left: -0px;
+    }
+
+    .login-container h2 {
+        font-size: 1.5rem;
+    }
+
+    .login-container button {
+        width: 50%;
+    }
+
+    .login-account .signup {
+        width: 90%;
+        margin-top: 10px;
+        margin-left: 20px;
+    }
+}
+
+@media (max-width: 590px) and (min-width: 481px) {
+    .login-container {
+        width: 60%;
+        margin: 50px auto;
+    }
+
+    .login-container h2 {
+        font-size: 1.5rem;
+        padding: 20px 0;
+    }
+
+    .login-input {
+        height: 35px;
+        font-size: 1.2rem;
+    }
+
+    .login-container button {
+        padding: 8px;
+        font-size: 1.1rem;
+    }
+
+    .login-account .signup {
+        font-size: 1.1rem;
+        padding: 8px 0;
+        
+    }
+
+    .login-container .forgot-link {
+        font-size: 1rem;
+        margin-left: 120px;
+    }
+
+    .login-container p {
+        font-size: 1.2rem;
     }
 }
 
 @media (max-width: 480px) {
     .login-container {
-        margin: 20px 10px;
+        margin: 50px auto;
+        width: 70%;
     }
 
+    .login-container h2 {
+        font-size: 1.5rem;
+    }
+
+    .login-input {
+        max-width: 80%;
+        font-size: 1.2rem;
+    }
+
+    .login-container .forgot-link {
+        font-size: 1rem;
+        margin-left: 120px;
+    }
+
+    .login-container button {
+        font-size: 1.2rem;
+    }
+
+    .login-account .signup {
+        font-size: 1.2rem;
+        padding: 8px 0;
+    }
 }

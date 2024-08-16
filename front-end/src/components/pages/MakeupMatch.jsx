@@ -29,7 +29,7 @@ function MakeupMatch() {
                 <video className="video1" src="/src/assets/full-video.mp4" type="video/mp4" controls={false} autoPlay loop muted ></video>
                 <div className="header-content">
                     <h4>Find Your Perfect Makeup Artist, Empower Your Confidence with Expert Makeup Artist in <span>MakeupMatch</span></h4>
-                    <h2>Experience Effortless Booking and Beautiful Results</h2>
+                    <h2>Experience Effortless Booking and Beautiful Results!</h2>
               
 
                  
@@ -53,11 +53,15 @@ function MakeupMatch() {
         
         
             <div className="home-text">
+                <div className="text">
                 <h1>Makeup Made Easy: Book Today!</h1>
+                </div>
+                
                 <div className="home-img">
                     <img src={makeup3} alt="" />
                     <img src={pexels1} alt="" />
                 </div>
+                
             </div>
    
         </div>

@@ -1,24 +1,27 @@
 
 :root{
-    --mainColor: #f069ca;
-    --secondaryColor: #f5c1d8;
-    --textColorWhite: #eee;
-    --textColorBlack: black;
+
+  --mainColor: #f069ca;
+  --secondaryColor: #f5c1d8;
+  --textColorWhite: #eee;
+  --textColorBlack: black;
 }
 
-/* General styles for the search bar container */
-.search-bar select {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    background-color: #f4f4f4;
-    border-radius: 8px;
-    width: 600px;
-    /* max-width: 600px; */
-    /* margin: 0 auto; */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+select{
+  margin-top: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  /* background-color: #f4f4f4; */
+  background-color: black;
+  border-radius: 8px;
+  width: 200px;
+  box-shadow: 0 25px 54px rgba(0, 0, 0, 0.1);
+}
+::placeholder{
+  text-align: center;
+}
   
   /* Styles for the Select component (assuming it's a basic dropdown) */
   /* .search-bar select {
@@ -30,26 +33,26 @@
   }
    */
   /* Responsive styling */
-  @media (max-width: 768px) {
-    .search-bar {
-      padding: 8px;
-      max-width: 100%;
-    }
-  
-    .search-bar select {
-      font-size: 14px;
-      padding: 6px 10px;
-    }
+@media (max-width: 768px) {
+  .search-bar {
+    padding: 8px;
+    max-width: 100%;
   }
-  
-  @media (max-width: 480px) {
-    .search-bar {
-      padding: 6px;
-    }
-  
-    .search-bar select {
-      font-size: 12px;
-      padding: 4px 8px;
-    }
+
+  .search-bar select {
+    font-size: 14px;
+    padding: 6px 10px;
   }
+}
+  
+@media (max-width: 480px) {
+  .search-bar {
+    padding: 6px;
+  }
+
+  .search-bar select {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+}
   
