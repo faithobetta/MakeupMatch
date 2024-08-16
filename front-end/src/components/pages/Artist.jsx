@@ -1,48 +1,68 @@
-// Artist.js
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import "../CSS-pages/Artist.css";
 
-const artists = [
-  {
-    id: 1,
-    header: "Featured Artist",
-    image: "https://images.unsplash.com/photo-1620576504147-118a150bbca2?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWFrZSUyMHVwJTIwYXJ0aXN0fGVufDB8fDB8fHwy",
-    name: "Faith",
-    brandName: "Faith's Art Studio",
-    address: "123 Art Lane, Creativity City",
-  },
-  {
-    id: 2,
-    header: "Emerging Talent",
-    image: "https://images.unsplash.com/photo-1620576504147-118a150bbca2?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWFrZSUyMHVwJTIwYXJ0aXN0fGVufDB8fDB8fHwy",
-    name: "Hope",
-    brandName: "Hope's Craft Corner",
-    address: "456 Inspiration Blvd, Imagination Town",
-  },
-  {
-    id: 3,
-    header: "Master of Color",
-    image: "artist3.jpg",
-    name: "Joy",
-    brandName: "Joy's Color World",
-    address: "789 Color Ave, Vibrant Village",
-  },
-];
-
 const Artist = () => {
+  const { location } = useParams(); // Get the location from the URL
+  const [artists, setArtists] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchArtists = async () => {
+      try {
+        const response = await fetch(`http://localhost:5174/api/auth/fetchArtistsByLocation/${location}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch artists');
+        }
+        const data = await response.json();
+
+        // Parse the Fileurl field for each artist
+        const updatedArtists = data.map(artist => {
+          return {
+            ...artist,
+            Fileurl: artist.Fileurl ? JSON.parse(artist.Fileurl) : [],
+          };
+        });
+
+        setArtists(updatedArtists);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchArtists();
+  }, [location]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
-  <>
-    <h2 className="artist-top">Makeup Artist in your location</h2>
-    <div className="artist-grid">
-      {artists.map((artist) => (
-        <div key={artist.id} className="artist-card">
-          <h2 className="artist-header">{artist.header}</h2>
-          <img src={artist.image} alt={artist.name} className="artist-image" />
-          <h2 className="artist-name">{artist.name}</h2>
-          <h3 className="artist-brand-name">{artist.brandName}</h3>
-          <h4 className="artist-address">{artist.address}</h4>
-        </div>
-      ))}
-    </div>
+    <>
+      <h2 className="artist-top">Makeup Artists in {location.replace('_', ' ')}</h2>
+      <div className="artist-grid">
+        {artists.map((artist) => (
+          
+          <Link key={artist.Artist_id} to={`/makeupArtistsProfile/${artist.Artist_id}`} className="artist-card-link">
+          <div className="artist-card">
+            <h2 className="artist-header">{artist.BrandName}</h2>
+            {/* Render the first image if available */}
+            {artist.Fileurl.length > 0 && <img className="artist-image" src={artist.Fileurl[0]} alt="Profile" />}
+            <h2 className="artist-name">{artist.name}</h2>
+            <h4 className="artist-address">{artist.Address}</h4>
+            <p className="artist-location">{artist.Location}</p>
+            <p className="artist-contact">{artist.ContactNumber}</p>
+          </div>
+        </Link>
+        ))}
+      </div>
     </>
   );
 }

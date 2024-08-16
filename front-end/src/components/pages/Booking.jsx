@@ -1,20 +1,23 @@
 import "../CSS-pages/booking.css";
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import TimePicker from 'react-time-picker';
-import 'react-time-picker/dist/TimePicker.css';
 import axios from 'axios';
 
 const Booking = () => {
-    const { artistId, clientId, serviceId } = useParams();
+    const {serviceId} = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState('10:00');
+    const { artistData, service } = location.state || {};
+    const artistIdx = artistData?.Artist_id || null;
+    const serviceIdx = service?.Service_id || null;    
+    console.log(artistData,service)
     const [bookedServices, setBookedServices] = useState([]);
     const [comment, setComment] = useState("");
-
+    const client = sessionStorage.getItem('clientId');
     useEffect(() => {
         if (serviceId && !bookedServices.some(s => s.Service_id === parseInt(serviceId))) {
             // Fetch service details from backend if needed
@@ -32,19 +35,20 @@ const Booking = () => {
         bookingDate.setHours(hours, minutes);
 
         const bookingData = {
-            Artist_id: parseInt(artistId),
-            Client_id: parseInt(clientId),
-            Service_id: parseInt(serviceId),
+            Artist_id: artistIdx ,
+            Client_id: parseInt(client),
+            Service_id: serviceIdx,
             Booking_date: bookingDate.toISOString(),
             Comment: comment,
         };
         
-
+          console.log(bookingData)
         try {
-            const response = await axios.post('http://localhost:5174/api/booking', bookingData);
+            const response = await axios.post('http://localhost:5174/api/appointment/booking', bookingData);
             console.log("Booking response:", response.data);
-            const totalAmount = calculateTotalPrice();
+            const totalAmountx = calculateTotalPrice();
             const currency = bookedServices[0]?.currency || '£';
+            const totalAmount =service?.Price
             navigate('/payment', { state: { totalAmount, currency } });
         } catch (error) {
             console.error("There was an error booking the service!", error);
@@ -72,19 +76,19 @@ const Booking = () => {
                 <DatePicker 
                     id="date-picker"
                     selected={selectedDate} 
-                    onChange={date => setSelectedDate(date)} 
+                    onChange={e => setSelectedDate(e.target.value)} 
                     dateFormat="MMMM d, yyyy"
                 />
             </div>
         
             <div className="booking-details">
                 <label className="select-time" htmlFor="time-picker">Select Time:</label>
-                <TimePicker 
-                    id="time-picker"
-                    onChange={setSelectedTime} 
-                    value={selectedTime}
-                />
+                <input 
+                     value={selectedTime}
+                   onChange={(e) => setSelectedTime(e.target.value)}
+                  aria-label="Time" type="time" />
             </div>
+            
             <div className="booking-details">
                 <label htmlFor="comment">Comment:</label>
                 <textarea id="comment" value={comment} onChange={(e) => setComment(e.target.value)}></textarea>
@@ -98,7 +102,8 @@ const Booking = () => {
                         </li>
                     ))}
                 </ul>
-                <p className="total-price">Total Price: {calculateTotalPrice()} {bookedServices[0]?.currency}</p>
+                <p className="total-price">Service Name: {service.Service_name}</p>
+                <p className="total-price">Total Price: {service.Price}</p>
             </div>
             <button className="add-service-book" onClick={handleAddMoreService}>Add More Service</button>
         

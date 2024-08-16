@@ -15,7 +15,9 @@ body{
 }
 
 .login-container{
-    margin: 100px 0px 100px 200px;
+    margin: auto;
+    margin-top: 150px;
+    margin-bottom: 60px;
     width: 400px;
     height: 450px;
     background: var(--mainColor);
@@ -44,8 +46,12 @@ body{
     border: none;
 }
 
+.login-container p{
+    font-size: 1.2rem;
+}
 .login-container .forgot-link{
-    margin-left: 46%; 
+    margin-left: 46%;
+    font-size: 1.2rem; 
 }
 .login-container button{
     margin-left: 30%;
@@ -55,7 +61,7 @@ body{
     padding: 5px 5px;
     border: none;
     border-radius: 30px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     margin-top: 8px;
     transition: .5s;
 }
@@ -75,7 +81,7 @@ body{
     padding: 8px 0px 0px 0px;
     border: none;
     border-radius: 5px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     margin-top: 8px;
     transition: .5s;
 }

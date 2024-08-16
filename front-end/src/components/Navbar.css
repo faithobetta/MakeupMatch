@@ -43,7 +43,10 @@ nav{
     color: black;
     font-size: 18px;
     border-radius: 50px;
-    background-color: #f5c1d8;
+    background-color: var(--mainColor);
+}
+.signup_nav:hover{
+
 }
 
 @media (max-width: 1200px) {

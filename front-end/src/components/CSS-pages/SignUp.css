@@ -14,18 +14,21 @@ body{
     --textColorBlack: black;
 }
 .signUp-home{
-
-    margin: 100px 0px 100px 40%;
+    font-size: 1.2rem;
+    margin: auto;
+    margin-top: 150px;
+    margin-bottom: 60px;
     width: 500px;
-    height: fit-content;
+    height: 450px;
     background: var(--mainColor);
     border-radius: 20px;
 }
 
 .signUp-home h2{
-    padding: 60px 0px 50px 0px;
+    padding: 40px 0px 40px 0px;
     color: var(--textColorWhite);
     text-align: center;
+
 }
 
 input{

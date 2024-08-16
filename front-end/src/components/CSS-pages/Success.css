@@ -1,0 +1,41 @@
+.payment-success-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px;
+    height: 100vh; /* Full height of the viewport */
+    position: relative; /* For the confetti effect */
+}
+
+.success-message {
+    position: absolute; /* Positioning over the confetti */
+    text-align: center;
+    color: #fff; /* Change this to suit your design */
+    z-index: 1; /* Ensure it appears above the confetti */
+}
+
+.success-message h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.success-message p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.continue-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #28a745; /* Green background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.continue-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}

@@ -11,13 +11,13 @@ import SignUpArtist from "./components/Validations/SignUpArtist";
 //import ArtistDashboard from "./components/pages/ArtistDashboard"
 import MakeupArtistsProfile from "./components/pages/MakeupArtistsProfile";
 import Booking from "./components/pages/Booking";
-//import PaymentPage from "./components/pages/PaymentPage";
+import PaymentPage from "./components/pages/PaymentPage";
 import About from "./components/Footer-pages/About"
 import Privacy from "./components/Footer-pages/Privacy"
 import Footer from "./components/Footer-pages/Footer";
 import ArtistDashboard from './components/pages/ArtistDashboard';
 import Artist from './components/pages/Artist';
-
+import Success from './components/pages/Success';
 
 
 
@@ -59,7 +59,7 @@ function App() {
           element: <SignUpArtist/>,
         },
         {
-          path: "/artist",
+          path: "/artists/:location",
           element: <Artist/>,
         },
         {
@@ -74,10 +74,14 @@ function App() {
           path: "/booking",
           element: <Booking/>,
         },
-        // {
-        //   path: "/payment",
-        //   element: <PaymentPage/>,
-        // },
+        {
+          path: "/payment",
+          element: <PaymentPage/>,
+        },
+        {
+          path: "/success",
+          element: <Success/>,
+        },
         {
           path: "/about",
           element: <About/>,

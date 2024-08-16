@@ -52,18 +52,6 @@ span {
     padding: 30%;
 }
 
-.search-bar{ 
-    margin: 80px;
-    height: 60px;
-    width: 800px;
-    background-color:white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 10px;
-    border-radius: 10px;
-    
-}
 input{
     border: none;
     width: 100%;
