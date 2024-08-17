@@ -38,16 +38,16 @@ function SignUpArtist() {
     <div className="signUp-home">
       <h2>Sign Up as Makeup Artist</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="text" placeholder='Name:' {...register("Name")} /> <br />
+        <input className="input-signup" type="text" placeholder='Name:' {...register("Name")} /> <br />
         <p className="error-text">{errors.Name?.message}</p>
 
-        <input type="email" placeholder='Email:' {...register("Email")} /> <br />
+        <input className="input-signup" type="email" placeholder='Email:' {...register("Email")} /> <br />
         <p className="error-text">{errors.Email?.message}</p>
 
-        <input type="password" placeholder='Password:' {...register("Password")} /> <br />
+        <input className="input-signup" type="password" placeholder='Password:' {...register("Password")} /> <br />
         <p className="error-text">{errors.Password?.message}</p>
 
-        <input type="password" placeholder='Confirm Password:' {...register("ConfirmPassword")} /> <br />
+        <input className="input-signup" type="password" placeholder='Confirm Password:' {...register("ConfirmPassword")} /> <br />
         <p className="error-text">{errors.ConfirmPassword?.message}</p>
 
         <input className="submit" type="submit" />

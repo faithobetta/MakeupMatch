@@ -29,9 +29,7 @@ body{
     text-align: center;
 }
 
-
-
-input {
+.input-signup {
     display: block;
     font-size: 1.4rem;
     width: 80%;
@@ -71,7 +69,7 @@ input {
         width: 80%; 
     }
 
-    input {
+    .input-signup {
         width: 90%;
     }
 }
@@ -82,7 +80,7 @@ input {
         margin: 40px auto; 
     }
 
-    input {
+    .input-signup {
         width: 90%; 
         font-size: 1.3rem; 
     }
@@ -98,7 +96,7 @@ input {
         width: 80%; 
     }
 
-    input {
+    .input-signup {
         width: 90%; 
         font-size: 1.2rem; 
     }

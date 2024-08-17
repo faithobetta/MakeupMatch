@@ -95,18 +95,16 @@ function ArtistDashboard() {
                 </div>
 
                 <div className="brand-name">
-                    <label>Brand Name:</label>
-                    <input type="text" value={BrandName} onChange={(e) => setBrandName(e.target.value)} required />
+                    Brand Name:<input className="brandname-input" type="text" value={BrandName} onChange={(e) => setBrandName(e.target.value)} required />
                 </div>
 
                 <div className="address">
-                    <label>Address:</label>
-                    <input type="text" value={Address} onChange={(e) => setAddress(e.target.value)} />
+                    Address:<input className="address-input" type="text" value={Address} onChange={(e) => setAddress(e.target.value)} />
                 </div>
 
-                <div className="address">
-                    <label htmlFor="location">Location:</label>
-                    <select 
+                <div className="location">
+            
+                    <select className="location-input"  placeholder="Location"
                         id="location" 
                         value={Location} 
                         onChange={(e) => setLocation(e.target.value)} 
@@ -150,39 +148,38 @@ function ArtistDashboard() {
 
 
                 <div className="services">
-                    <label>Services:</label>
                     {Services.map((service, index) => (
                         <div key={index} className="service">
-                            <input
+                            Services:<input className="name-input"
                                 type="text"
                                 placeholder="Service Name"
                                 value={service.Service_name}
                                 onChange={(e) => handleServiceChange(index, 'Service_name', e.target.value)}
                                 required
                             />
-                            <input
+                            <input className="price-input"
                                 type="text"
                                 placeholder="Price"
                                 value={service.Price}
                                 onChange={(e) => handleServiceChange(index, 'Price', e.target.value)}
                                 required
                             />
-                            <input
+                            <input className="duration-input"
                                 type="number"
                                 placeholder="Duration"
                                 value={service.Duration}
                                 onChange={(e) => handleServiceChange(index, 'Duration', e.target.value)}
                                 required
                             />
-                            <button type="button" onClick={() => handleRemoveService(index)}>Remove</button>
+                            <button className="remove-button" type="button" onClick={() => handleRemoveService(index)}>Remove</button>
                         </div>
                     ))}
-                    <button className="add-service-book" type="button" onClick={handleAddService}>Add Service</button>
+                    <button className="add-service" type="button" onClick={handleAddService}>Add Service</button>
                 </div>
 
                 <div className="file-upload">
                     <label>Upload Files (Pictures/Videos):</label>
-                    <input type="file" multiple accept="image/*,video/*" onChange={handleFileUpload} />
+                    <input className="upload-input" type="file" multiple accept="image/*,video/*" onChange={handleFileUpload} />
                     <div className="uploaded-files">
                         {uploadedFiles.map((file, index) => (
                             <div key={index} className="uploaded-file">
@@ -197,8 +194,7 @@ function ArtistDashboard() {
                 </div>
 
                 <div className="contact">
-                    <label>Contact Number:</label>
-                    <input type="text" value={ContactNumber} onChange={(e) => setContactNumber(e.target.value)} required />
+                    Contact Number:<input className="contact-input" type="text" value={ContactNumber} onChange={(e) => setContactNumber(e.target.value)} required />
                 </div>
 
                 <button className="artistDashboardButton" type="submit">Submit</button>

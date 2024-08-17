@@ -14,76 +14,277 @@ body{
     --textColorBlack: black;
 }
 
-/* .profile-page {
-    margin-top: 100px;
-    margin-bottom: 100px;
-} */
-/* src/components/ProfilePage.css */
 .profile-page {
-    margin: 0 auto;
-    margin-top: 100px;
-    margin-bottom: 100px;
-    max-width: 900px;
-    
-    padding: 30px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-  }
+  margin: 100px auto;
+  max-width: 1100px;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+}  
   
-  .profile-page h1 {
-    text-align: center;
-  }
+.profile-page h1 {
+  text-align: center;
+}
+ 
+.profile-picture ,
+.brand-name,
+.services ,
+.contact,
+.address,
+.location,
+.file-upload {
+  display: block;
+  margin-bottom: 5px;
+  border-color: var(--textColorBlack);
+  font-weight: bold;
+}
+
+.brandname-input, .address-input, .location-input, .contact-input{
+  width: 400px;
+  height: 40px;
+  border-radius: 10px;
+  margin: 20px;
+  font-size: 1.2rem;
+}
+
+.location-input{
+  font-size: 1.2rem;
+}
+
+.profile-picture img,
+.uploaded-files img,
+.uploaded-files video {
+  display: block;
+  margin-top: 10px;
+}
   
-  .profile-picture,
-  .brand-name,
-  .services,
-  .contact,
-  .address,
-  .file-upload {
-    margin-bottom: 20px;
-  }
+.services .service {
+  display: flex;
+  gap: 1px;
+  margin-bottom: 10px;
+}
+
+.name-input, .price-input, .duration-input{
+  font-size: 1.2rem;
+  width: 250px;
+  height: 40px;
+  border-radius: 10px;
+  margin: 10px;
+}
   
-  .profile-picture label,
-  .brand-name label,
-  .services label,
-  .contact label,
-  .address label,
-  .file-upload label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+.services .service button {
+  flex: none;
+}
+
+.add-service{
+  display: block;
+  background-color: var(--mainColor);
+  color: var(--textColorWhite);
+  width: 50%;
+  max-width: 200px;
+  margin-bottom: 20px;
+  padding: 10px 0;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  transition: .5s;
+  cursor: pointer;
+  text-align: center;
+}
+.add-service:hover{
+  background-color: var(--secondaryColor);
+}
+
+.remove-button{
+  background-color: red;
+  color: var(--textColorWhite);
+  width: 20%;
+  max-width: 200px;
+  margin-bottom: 20px;
+  margin-top: 5px;
+  padding: 10px 0;
+  border: none;
+  font-size: 1.2rem;
+  transition: .5s;
+  cursor: pointer;
+  text-align: center;
+}
+
+.remove-button:hover{
+  background-color: rgb(236, 64, 64);
+}
+
+.upload-input{
+  font-size: 1.2rem;
+  height: 50px;
+  border-radius: 10px;
+}
+.artistDashboardButton{
+  display: block;
+  margin: 20px auto;
+  width: 50%;
+  max-width: 200px;
+  background-color: var(--mainColor);
+  color: var(--textColorWhite);
+  padding: 10px 0;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  transition: .5s;
+  cursor: pointer;
+  text-align: center;
+}
+.artistDashboardButton:hover{
+  background-color: var(--secondaryColor);
+}
+
+
+@media (max-width: 1110px) and (min-width: 769px) {
+  .profile-page {
+      max-width: 95%;
+      padding: 25px;
   }
-  
-  .profile-picture img,
-  .uploaded-files img,
-  .uploaded-files video {
-    display: block;
-    margin-top: 10px;
+
+  .brandname-input,
+  .address-input,
+  .location-input,
+  .contact-input {
+      max-width: 80%;
+      margin: 10px 0;
   }
-  
+
   .services .service {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
+      gap: 5px;
+      flex-wrap: wrap;
   }
-  
-  .services .service input {
-    flex: 1;
+
+  .name-input,
+  .price-input,
+  .duration-input {
+      max-width: 60%;
+      margin: 5px 0;
   }
-  
-  .services .service button {
-    flex: none;
+
+  .add-service,
+  .artistDashboardButton {
+      max-width: 30%;
   }
-  .artistDashboardButton{
-    padding: 10px 20px;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 20px;
-    margin-left: 350px;
-    margin-bottom: 20px;
-    background-color: var(--mainColor);
-    color: white;
-    font-size: 18px;   
+
+  .remove-button {
+      max-width: 100%;
   }
+}
+
+
+@media (max-width: 768px) {
+  .profile-page {
+      margin: 50px auto;
+      width: 70%;
+      padding: 20px;
+  }
+
+  .profile-page h1 {
+      font-size: 1.8rem;
+  }
+
+  .brandname-input,
+  .address-input,
+  .location-input,
+  .contact-input {
+      width: 70%;
+      max-width: 100%;
+  }
+
+  .services .service {
+      flex-direction: column;
+      gap: 0;
+  }
+
+  .remove-button{
+    width: 40%;
+  }
+  .name-input,
+  .price-input,
+  .duration-input {
+      width: 50%;
+      max-width: 100%;
+  }
+}
+
+@media (max-width: 590px) and (min-width: 481px) {
+  .profile-page {
+      width: 70%;
+      padding: 20px;
+  }
+
+  .profile-page h1 {
+      font-size: 1.5rem;
+  }
+
+  .brandname-input,
+  .address-input,
+  .location-input,
+  .contact-input {
+      width: 60%;
+      max-width: 100%;
+  }
+
+  .name-input,
+  .price-input,
+  .duration-input {
+      width: 50%;
+      max-width: 100%;
+  }
+
+  .name-input,
+  .price-input,
+  .duration-input {
+      font-size: 1rem;
+      margin: 8px 0;
+  }
+  .remove-button{
+    width: 40%;
+  }
+
+  .add-service,
+  .remove-button,
+  .artistDashboardButton {
+      font-size: 1rem;
+      padding: 8px 0;
+  }
+}
+
+
+/* For screens 480px and below */
+@media (max-width: 480px) {
+  .profile-page {
+      width: 75%;
+      padding: 15px;
+  }
+
+  .profile-page h1 {
+      font-size: 1.5rem;
+  }
+
+  .brandname-input,
+  .address-input,
+  .location-input,
+  .contact-input{
+      width: 55%;
+      max-width: 100%;
+  }
+  .remove-button{
+    width: 40%;
+  }
+  .upload-input{
+    font-size: 1rem;
+  }
+
+  .name-input,
+  .price-input,
+  .duration-input {
+      width: 50%;
+      max-width: 100%;
+  }
+}
