@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
+import "../CSS-pages/map.css";
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 
@@ -50,7 +51,7 @@ function Map({ latitude, longitude }) {
   };
 
   return isLoaded ? (
-    <GoogleMap
+    <GoogleMap className="map"
       mapContainerStyle={containerStyle}
       center={{ lat: latitude, lng: longitude }} // Center on provided latitude and longitude
       zoom={18}
@@ -58,13 +59,10 @@ function Map({ latitude, longitude }) {
       onUnmount={onUnmount}
       onClick={handleMapClick} // Add click handler
     >
-      {/* Marker for the user's current location */}
       {userLocation && <Marker position={{ lat: latitude, lng: longitude }}  label="" />}
       
-      {/* Marker for the selected location */}
       {selectedLocation && <Marker position={selectedLocation} label="Selected location" />}
-      
-      {/* Marker for the artist's location */}
+  
       <Marker position={{ lat: latitude, lng: longitude }} label="Artist's Location" />
     </GoogleMap>
   ) : <></>;

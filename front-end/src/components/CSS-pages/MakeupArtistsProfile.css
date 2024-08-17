@@ -32,30 +32,35 @@ body{
     text-align: center;
     padding: 40px;
 }
+.profile-brandname{
+    border-bottom: 3px solid #ccc;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
 
 .div-address p{
     text-align: center;
-    padding-bottom: 30px;
-    font-size: 20px;
+    padding-top: 60px;
+    padding-bottom: 70px;
+    font-size: 1.5rem;
+    border-bottom: 3px solid #ccc;
 }
 
 .div-service h3{
     padding: 10px;
     text-align: center;
     font-size: 30px;
+    padding-top: 50px;
 }
 
 .div-service ul li{
-    font-size: 20px;
+    font-size: 1.4rem;
     display: flex;
-    justify-content:space-around;
+    justify-content: space-around;
     line-height: 50px;
     padding: 20px 0;
     border-bottom: 3px solid #ccc;
 }
-/* .div-service ul li:last-child{
-    border-bottom: none;
-} */
 
 .div-service .book{
     height: 40px;
@@ -74,6 +79,7 @@ body{
 .div-contact{
     text-align: center;
     padding: 40px;
+    border-bottom: 3px solid #ccc;
 }
 
 .div-contact h3{
@@ -87,6 +93,7 @@ body{
 .work-pictures{
     text-align: center;
     font-size: 20px;
+    border-bottom: 3px solid #ccc;
 }
 .work-pictures h3{
     padding-top: 50px;
@@ -121,6 +128,7 @@ body{
     text-align: center;
     line-height: 2rem;
     padding-bottom: 20px;
+    border-bottom: 3px solid #ccc;
 }
 
 .reviews-section p{

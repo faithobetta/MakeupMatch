@@ -115,7 +115,7 @@ const MakeupArtistsProfile = () => {
         `http://localhost:5174/api/review/post-review`,
         {
           Artist_id: id,
-          Client_id: 1, // Adjust as needed for client authentication
+          Client_id: 1, 
           Rating: newRating,
           Comment: newComment,
         }
@@ -166,10 +166,15 @@ const MakeupArtistsProfile = () => {
           {imgData.length > 0 && (
             <img className="profile-img" src={imgData[0]} alt="Profile" />
           )}
+
+          <div className="profile-brandname">
           <h2>{data.BrandName}</h2>
+          </div>
+          
           <div className="div-address">
             <p>{data.Address}</p>
           </div>
+
           <div className="div-service">
             <h3>Services We Offer</h3>
             <ul>
