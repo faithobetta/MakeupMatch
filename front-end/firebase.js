@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 const firebaseConfig = {
-  apiKey: "AIzaSyAcmeLI_CcVXPwaTUIpJod0HsWBLvWJrJ8",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "makeupmatch-3b7d1.firebaseapp.com",
   projectId: "makeupmatch-3b7d1",
   storageBucket: "makeupmatch-3b7d1.appspot.com",

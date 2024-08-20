@@ -5,15 +5,17 @@ import React, { useEffect, useState } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
-  width: '100vw',
-  height: '400px',
-  margin: "20px"
+  height: "250px",
+  margin: "20px",
+  // padding:"20px"
+
 };
+
 
 function Map({ latitude, longitude }) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "AIzaSyCXF6BlbNZbDMI715io9A-fjb92VgDZaNU" // Replace with your API key
+    googleMapsApiKey: import.meta.env.VITE_GOOGLEMAP_API_KEY // Replace with your API key
   });
 
   const [map, setMap] = useState(null);
@@ -51,20 +53,23 @@ function Map({ latitude, longitude }) {
   };
 
   return isLoaded ? (
-    <GoogleMap className="map"
-      mapContainerStyle={containerStyle}
-      center={{ lat: latitude, lng: longitude }} // Center on provided latitude and longitude
-      zoom={18}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-      onClick={handleMapClick} // Add click handler
-    >
-      {userLocation && <Marker position={{ lat: latitude, lng: longitude }}  label="" />}
+    <div className="map-container">
+      <GoogleMap 
+        mapContainerStyle={containerStyle}
+        center={{ lat: latitude, lng: longitude }} // Center on provided latitude and longitude
+        zoom={18}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        onClick={handleMapClick} // Add click handler
+      >
+        {userLocation && <Marker position={{ lat: latitude, lng: longitude }}  label="" />}
       
-      {selectedLocation && <Marker position={selectedLocation} label="Selected location" />}
+        {selectedLocation && <Marker position={selectedLocation} label="Selected location" />}
   
-      <Marker position={{ lat: latitude, lng: longitude }} label="Artist's Location" />
-    </GoogleMap>
+        <Marker position={{ lat: latitude, lng: longitude }} label="Artist's Location" />
+      </GoogleMap>
+    </div>
+
   ) : <></>;
 }
 

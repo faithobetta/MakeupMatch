@@ -46,7 +46,7 @@ const handleSelectChange = (selectedOption) => {
 };
   return (
     <div className="search-bar">
-  <Select  placeholder="Enter your Location to Search for Artist" options={options} onChange={handleSelectChange} />
+  <Select  placeholder="Enter your Location to Search for Artist" options={options} onChange={handleSelectChange}  classNamePrefix="react-select" />
     </div>
   
   )

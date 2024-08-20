@@ -18,6 +18,7 @@ import Footer from "./components/Footer-pages/Footer";
 import ArtistDashboard from './components/pages/ArtistDashboard';
 import Artist from './components/pages/Artist';
 import Success from './components/pages/Success';
+import Admin from './components/pages/Admin';
 
 
 
@@ -87,10 +88,13 @@ function App() {
           element: <About/>,
         },
         {
-          path: "privacy",
+          path: "/privacy",
           element: <Privacy/>,
         },
- 
+        {
+          path: "/admin",
+          element: <Admin/>,
+        },
       ],
     },
   

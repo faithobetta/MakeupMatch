@@ -1,7 +1,7 @@
 import "../CSS-pages/Footer.css"
-// import fb from "../../assets/fb.svg"
-// import Instagram from '../../assets/Instagram.svg'
-// import twitter from '../../assets/twitter.svg'
+import fb from "../../assets/fb.svg"
+import Instagram from '../../assets/Instagram.svg'
+import twitter from '../../assets/twitter.svg'
 import {Link} from "react-router-dom";
 
 function Footer() {
@@ -24,11 +24,11 @@ function Footer() {
 
           <div className="footer-links-div">
             <h4>Follow Us</h4>
-            {/* <div className="social-media">
-              <p><img src={fb} alt="" /></p>
-              <p><img src={Instagram} alt="" /></p>
-              <p><img src={twitter} alt="" /></p>  
-            </div>              */}
+            <div className="social-media">
+              <img className="social-img" src={fb} alt="" />
+              <img className="social-img" src={Instagram} alt="" />
+              <img className="social-img" src={twitter} alt="" /> 
+            </div>             
           </div>  
         </div>
         <hr></hr>

@@ -7,52 +7,91 @@
   --textColorBlack: black;
 }
 
-select{
-  margin-top: 70px;
+.search-bar {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
-  background-color: #f4f4f4;
-  /* background-color: black; */
-  border-radius: 8px;
-  width: 200px;
-  box-shadow: 0 25px 54px rgba(0, 0, 0, 0.1);
+  margin: 50px auto;
 }
-::placeholder{
+
+.react-select__control {
+  background-color: black;
+  border-radius: 8px;
+  padding: 5px;
+  width: 700px;
+  font-size: 36px;
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.1);
+}
+
+.react-select__control:hover {
+  border-color: var(--secondaryColor);
+}
+
+.react-select__placeholder {
+  color: var(--mainColor);
+  font-size: 18px;
   text-align: center;
 }
-  
-  /* Styles for the Select component (assuming it's a basic dropdown) */
-  /* .search-bar select {
-    width: 200px;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-   */
-  /* Responsive styling */
-@media (max-width: 768px) {
-  .search-bar {
-    padding: 8px;
-    max-width: 100%;
+
+.react-select__single-value {
+  color: white;
+  background-color: red;
+}
+
+.react-select__menu {
+  border-radius: 8px;
+  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.1);
+  background-color: red;
+}
+
+/* .react-select__option {
+  padding: 10px;
+  font-size: 36px;
+} */
+
+/* .react-select__option--is-focused {
+  background-color: var(--secondaryColor);
+  color: var(--textColorWhite);
+} */
+
+/* .react-select__option--is-selected {
+  background-color: black;
+  color: var(--textColorWhite);
+} */
+
+
+ @media (max-width: 768px) {
+  .react-select__control {
+    font-size: 2rem; 
+    width: 500px;
   }
 
-  .search-bar select {
-    font-size: 14px;
-    padding: 6px 10px;
+  .react-select__placeholder {
+    font-size: 1.2rem; 
   }
 }
-  
+
+@media (max-width: 590px) {
+  .search-bar {
+    /* margin: 30px auto; */
+    
+  }
+
+  .react-select__control {
+    width: 400px;
+    font-size: 2rem;
+  }
+
+  .react-select__placeholder {
+    font-size: 1.1rem; 
+  }
+}
 @media (max-width: 480px) {
-  .search-bar {
-    padding: 6px;
+  .react-select__control {
+    font-size: 2rem; 
   }
 
-  .search-bar select {
-    font-size: 12px;
-    padding: 4px 8px;
+  .react-select__placeholder {
+    font-size: 1.1rem; 
   }
 }
-  

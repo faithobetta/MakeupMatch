@@ -11,7 +11,7 @@
 .success-message {
     position: absolute; /* Positioning over the confetti */
     text-align: center;
-    color: #fff; /* Change this to suit your design */
+    color: black; /* Change this to suit your design */
     z-index: 1; /* Ensure it appears above the confetti */
 }
 

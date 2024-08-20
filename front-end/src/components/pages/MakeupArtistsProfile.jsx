@@ -201,11 +201,10 @@ const MakeupArtistsProfile = () => {
             <div className="grid-layout">
               {imgData.map((url, index) => (
                 <div key={index} className="grid-item">
-                  <img
+                  <img className="work-img"
                     src={url}
                     alt={`Upload ${index}`}
-                    width="500"
-                    height="400"
+                    
                   />
                 </div>
               ))}
@@ -217,6 +216,35 @@ const MakeupArtistsProfile = () => {
           </div>
 
           <div className="reviews-section">
+
+            <div className="add-review">
+              <h3>Add a Review</h3>
+              <form className="addForm" onSubmit={handlePostReview}>
+                <input className="comment-input"
+                  type="text"
+                  placeholder="Write your opinion"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  required
+                />
+                <select className="rating-div"
+                  value={newRating}
+                  onChange={(e) => setNewRating(parseInt(e.target.value))}
+                  required
+                >
+                  {[1, 2, 3, 4, 5].map((rating) => (
+                    <option key={rating} value={rating}>
+                      {rating}
+                    </option>
+                  ))}
+                </select>
+                <button className="review-submit" type="submit" disabled={postingReview}>
+                  {postingReview ? "Sending..." : "Submit Review "}
+                </button>
+                {postReviewError && <p className="error">{postReviewError}</p>}
+              </form>
+              </div>
+
             <h2>Reviews</h2>
             {reviewsLoading ? (
               <p>Loading reviews...</p>
@@ -230,33 +258,7 @@ const MakeupArtistsProfile = () => {
               <p>No reviews yet.</p>
             )}
 
-            <div className="add">
-              <h3>Add a Review</h3>
-              <form className="addForm" onSubmit={handlePostReview}>
-                <input
-                  type="text"
-                  placeholder="Write your opinion"
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  required
-                />
-                <select
-                  value={newRating}
-                  onChange={(e) => setNewRating(parseInt(e.target.value))}
-                  required
-                >
-                  {[1, 2, 3, 4, 5].map((rating) => (
-                    <option key={rating} value={rating}>
-                      {rating}
-                    </option>
-                  ))}
-                </select>
-                <button type="submit" disabled={postingReview}>
-                  {postingReview ? "Sending..." : "Send"}
-                </button>
-                {postReviewError && <p className="error">{postReviewError}</p>}
-              </form>
-            </div>
+
           </div>
 
           <div className="map-container">

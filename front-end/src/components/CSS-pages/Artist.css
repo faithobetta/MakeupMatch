@@ -1,49 +1,64 @@
+:root{
+  --mainColor: #f069ca;
+  --secondaryColor: #f5c1d8;
+  --textColorWhite: #eee;
+  --textColorBlack: black;
+}
+body{
+  background-color: #f7f2f6;
+}
+
+.artist-top {
+  font-size: 2rem;
+  margin-top: 80px;
+  text-align: center;
+  padding: 40px;
+
+}
 .artist-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* grid-template-columns: 300px 300px 300PX; */
+  gap: 20px;
+  padding: 20px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  height: fit-content;
+  /* padding-left: 120px; */
   
-  .artist-card {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+}
   
-  .artist-header {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-  }
+.artist-card {
+  /* width: 600px; */
+  margin: auto;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 0px 19px rgba(0, 0, 0, 0.1);
+}
+
+.artist-header {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: var(--textColorBlack);
+}
   
-  .artist-top {
-    font-size: 1.5rem;
-    margin-top: 80px;
-    text-align: center;
-  
-  }
-  .artist-image {
-    width: 100%;
-    height: auto;
-    max-height: 200px;
-    object-fit: cover;
-    margin-bottom: 15px;
-  }
-  
-  .artist-name {
-    font-weight: bold;
-    font-size: 1.25rem;
-    margin-bottom: 5px;
-  }
-  
-  .artist-brand-name {
-    color: #555;
-    margin-bottom: 5px;
-  }
-  
-  .artist-address {
-    color: #777;
-  }
+.artist-image {
+  width: 80%;
+  height: 300px;
+  max-height: 400px;
+  object-fit: cover;
+  margin-bottom: 19px;
+}
+
+.artist-address {
+  color: var(--textColorBlack);
+}
+
+.artist-location{
+  color: var(--textColorBlack);
+}
+
   

@@ -9,7 +9,7 @@ import MasterCard_Logo from './MasterCard_Logo.svg';
 import Amexlogo from './Amexlogo.svg';
 
 // Make sure to replace this with your own public key
-const stripePromise = loadStripe('pk_test_51PeoilRxmDLqCrWRI3h4mcpC8YUhq70HjJy3fDLvrNLt6znAkTu19MVjPaxg0I8r8fQ59wmlgLU4I8uMSTsV38ce00hMCd0nmK');
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_API_KEY);
 
 const CheckoutForm = ({ totalAmount, currency, selectedCardType }) => {
     const stripe = useStripe();

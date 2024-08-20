@@ -25,28 +25,29 @@ body{
     border-radius: 4px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-.booking-service{
-    display: block;
-    font-size: 20px;
-    padding: 20px;
-    width: 600px;
-    height: fit-content;
-    background-color:hsl(0, 10%, 86%);
-    margin-bottom: 40px;
-    text-decoration: none;
+.booking-details {
+    margin-bottom: 20px;
+}
 
+
+.picker{
+    width: 300px;
+    height: 40px;
+    border-radius: 10px;
+    margin: 20px;
+    font-size: 1.3rem;
 }
 
 .total-price{
     font-size: 19px;
     text-align: center;
-    margin-left: 65%;
+    margin-left: 40%;
     padding: 20px;
     background-color:hsl(0, 10%, 86%);
-    width: 200px;
+    width: 400px;
     height: fit-content;
 }
-.add-service-book{
+/* .add-service-book{
     display: block;
     padding: 10px 20px;
     background-color: var(--mainColor);
@@ -59,15 +60,13 @@ body{
 
 .add-service-book:hover{
     background-color: var(--secondaryColor);
-}
-.booking-details {
-    margin-bottom: 20px;
+} */
+
+.select-time, .select-date, .booking-comment, .comment{
+    font-size: 25px;
 }
 
-.select-time, .select-date{
-    font-size: 20px;
-}
-.remove-service {
+/* .remove-service {
     font-size: 16px;
     background-color: red; 
     color: white; 
@@ -76,25 +75,107 @@ body{
     margin-left: 30%; 
     cursor: pointer; 
     border-radius: 3px; 
-}
+} */
 
 .book-button {
-    padding: 10px 20px;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 50px;
-    margin-left: 250px;
-    margin-bottom: 40px;
+    
     background-color: var(--mainColor);
-    color: white;
-    font-size: 18px;   
+    color: var(--textColorWhite);
+    width: 30%;
+    max-width: 150px;
+    margin-bottom: 20px;
+    margin-top: 40px;
+    margin-left: 90px;
+    padding: 10px 0;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    transition: .5s;
+    cursor: pointer;
+    text-align: center;  
 }
   
 .book-button:hover {
     background-color: var(--secondaryColor);
 }
-.time-picker{
-    
+
+
+@media (max-width: 768px) {
+    .book-service-page {
+        padding: 30px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        width: 80%;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .picker, .comment {
+        
+        font-size: 1.2rem;
+    }
+
+    .total-price {
+        font-size: 1.1rem;
+        margin-left: 18%;
+        width: 350px;
+    }
+
+    .book-button{
+        max-width: 100%;
+    }
+}
+
+
+@media (max-width: 590px) and (min-width: 481px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .picker, .comment {
+        font-size: 1rem;
+    }
+
+    .total-price {
+        font-size: 1rem;
+        width: 300px;
+        margin-left: 15%;
+    }
+
+    .book-button {
+        font-size: 1.1rem;
+        margin-left: 25px;
+        
+    }
+}
+
+/* Responsive for screens 480px and below */
+@media (max-width: 480px) {
+    .book-service-page {
+        padding: 10px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .picker, .comment {
+        font-size: 0.9rem;
+        width: 250px;
+    }
+
+    .total-price {
+        font-size: 1rem;
+        padding: 10px;
+        width: 220px;
+    }
+
+    .book-button {
+        font-size: 1rem;
+        margin-left: -0px;
+    }
 }

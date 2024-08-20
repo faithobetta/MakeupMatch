@@ -74,24 +74,23 @@ const Booking = () => {
             <div className="booking-details">
                 <label className="select-date" htmlFor="date-picker">Select Date:</label>
                 <DatePicker 
-                    id="date-picker"
+                    id="date-picker" className="picker"
                     selected={selectedDate} 
-                    onChange={e => setSelectedDate(e.target.value)} 
+                    onChange={(date) => setSelectedDate(date)} 
                     dateFormat="MMMM d, yyyy"
-                />
-            </div>
+                />   </div>
         
             <div className="booking-details">
                 <label className="select-time" htmlFor="time-picker">Select Time:</label>
-                <input 
+                <input className="picker"
                      value={selectedTime}
                    onChange={(e) => setSelectedTime(e.target.value)}
                   aria-label="Time" type="time" />
             </div>
             
             <div className="booking-details">
-                <label htmlFor="comment">Comment:</label>
-                <textarea id="comment" value={comment} onChange={(e) => setComment(e.target.value)}></textarea>
+                <label className="booking-comment" htmlFor="comment">Comment:</label>
+                <textarea className="comment" id="comment" value={comment} onChange={(e) => setComment(e.target.value)}></textarea>
             </div>
             <div className="booked-services">
                 <ul>

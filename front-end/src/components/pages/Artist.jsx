@@ -55,10 +55,8 @@ const Artist = () => {
             <h2 className="artist-header">{artist.BrandName}</h2>
             {/* Render the first image if available */}
             {artist.Fileurl.length > 0 && <img className="artist-image" src={artist.Fileurl[0]} alt="Profile" />}
-            <h2 className="artist-name">{artist.name}</h2>
-            <h4 className="artist-address">{artist.Address}</h4>
-            <p className="artist-location">{artist.Location}</p>
-            <p className="artist-contact">{artist.ContactNumber}</p>
+            <h5 className="artist-address">{artist.Address}</h5>
+            <h4 className="artist-location">{artist.Location}</h4>
           </div>
         </Link>
         ))}
