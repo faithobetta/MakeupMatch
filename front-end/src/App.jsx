@@ -14,6 +14,7 @@ import Booking from "./components/pages/Booking";
 import PaymentPage from "./components/pages/PaymentPage";
 import About from "./components/Footer-pages/About"
 import Privacy from "./components/Footer-pages/Privacy"
+import HelpCenter from './components/Footer-pages/HelpCenter';
 import Footer from "./components/Footer-pages/Footer";
 import ArtistDashboard from './components/pages/ArtistDashboard';
 import Artist from './components/pages/Artist';
@@ -92,9 +93,14 @@ function App() {
           element: <Privacy/>,
         },
         {
+          path: "/helpcenter",
+          element: <HelpCenter/>,
+        },
+        {
           path: "/admin",
           element: <Admin/>,
         },
+        
       ],
     },
   

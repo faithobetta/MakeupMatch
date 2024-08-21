@@ -1,0 +1,31 @@
+
+:root{
+    --mainColor: #f069ca;
+    --secondaryColor: #f5c1d8;
+    --textColorWhite: #eee;
+    --textColorBlack: black;
+  }
+.contact-container {
+    position: relative;
+    height: 400px;
+    background-image: url('https://images.pexels.com/photos/7290089/pexels-photo-7290089.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+    background-size:cover;
+    text-align:center;
+    background-repeat: no-repeat;
+    color: #fff;
+    margin-top: 80px;
+   
+  }
+  .form{
+    /* width: 700px; */
+    /* margin: auto; */
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+    /* background-color: var(--mainColor); */
+  }
+
+.helpcenter-submit{
+    /* margin-left: 50px; */
+    /* background-color: var(--mainColor); */
+}

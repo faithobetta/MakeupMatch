@@ -19,7 +19,7 @@ function Footer() {
 
           <div className="footer-links-div">
             <h4>Contact</h4>
-            <Link className="footer-a" to="/help">Help Center</Link>        
+            <Link className="footer-a" to="/helpcenter">Help Center</Link>        
           </div>
 
           <div className="footer-links-div">
