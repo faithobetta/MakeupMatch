@@ -1,40 +1,93 @@
-*{
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
     font-family: sans-serif;
-}
-body{
+  }
+  
+  body {
     background-color: #f7f2f6;
-}
-
-:root{
+  }
+  
+  :root {
     --mainColor: #f069ca;
     --secondaryColor: #f5c1d8;
     --textColorWhite: #f7f2f6;
     --textColorBlack: black;
-}
-
-.privacy{
-    margin-top: 80px; 
+  }
+  
+  .privacy {
+    margin-top: 80px;
     margin-bottom: 80px;
-    width: 1100px;
-    height: fit-content;
+    width: 90%; /* Adjusted width to be percentage-based */
+    max-width: 1100px; /* Max width to prevent overflow on larger screens */
+    padding: 20px; /* Added padding for better spacing */
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: var(--textColorWhite);
-    margin-left: 30%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px; /* Added border-radius for better design */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added box-shadow for a subtle effect */
+  }
   
-}
-
-.privacy-text{
-    line-height: 2rem;
-    font-size: 18px;
-   margin-bottom: 50px;
-   padding: 40px; 
-}
-
-h5{
-   font-size: 20px;
-}
+  .privacy-text {
+    line-height: 1.8rem;
+    font-size: 16px; /* Adjusted font size for better readability */
+    padding: 20px; /* Reduced padding for better fit on smaller screens */
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  h5 {
+    font-size: 18px; 
+    margin-top: 20px;
+  }
+  
+  @media only screen and (max-width: 768px) {
+   
+    .privacy {
+      padding: 15px;
+    }
+  
+    .privacy-text {
+      font-size: 16px; 
+      line-height: 1.6rem;
+      padding: 15px;
+    }
+  
+    h1 {
+      font-size: 25px; 
+    }
+  
+    h5 {
+      font-size: 20px;
+    }
+  }
+  
+  @media only screen and (max-width: 480px) {
+    
+    .privacy {
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+  
+    .privacy-text {
+      font-size: 16px; 
+      line-height: 1.5rem;
+      padding: 10px;
+    }
+  
+    h1 {
+      font-size: 25px; 
+    }
+  
+    h5 {
+      font-size: 20px;
+    }
+  }
+  
