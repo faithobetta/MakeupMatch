@@ -86,7 +86,6 @@ function ArtistDashboard() {
     return (
         <div className="profile-page">
             <h1>Makeup Artist Dashboard</h1>
-
             <form onSubmit={handleSubmit}>
                 <div className="profile-picture">
                     <label>Profile Picture:</label>

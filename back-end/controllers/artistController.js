@@ -57,11 +57,7 @@ const newArtistDashboard = {
   ContactNumber: req.body.ContactNumber,
   Fileurl: JSON.stringify(req.body.Fileurl) 
 };
-// console.log("New Artist Dashboard Data:", newArtistDashboard);
 
-  console.log(artistId);
-
-  // Insert new artist dashboard details into the database
   const insertArtistDashboardQuery = `
     INSERT INTO Artistdashboard (Artist_id,  BrandName, Address, Location, ContactNumber, Fileurl) 
     VALUES (?, ?, ?, ?, ?, ?)`;
