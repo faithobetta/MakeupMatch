@@ -1,45 +1,55 @@
 import bcrypt from 'bcryptjs';
 import { db } from '../db.js';
+import Client from '../models/Client.js'; 
 
 
 
           // signup client 
-export const SignUpClient = (req, res) => {
-  const q = "SELECT * FROM client WHERE email = ?";
-  db.query(q, [req.body.Email], (err, data) => {
-    if (err) return res.status(500).json(err);
-    if (data.length) return res.status(409).json("client already exists!");
+export const SignUpClient = async (req, res) => {
+  try {
+    // Check if the client already exists
+    const existingClient = await Client.findOne({ email: req.body.Email });
+    if (existingClient) {
+      return res.status(409).json("Client already exists!");
+    }
 
+    // Hash the password
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.Password, salt);
-    const newUser = {
-      Name: req.body.Name,
-      Email: req.body.Email,
-      Password: hash,
-    };
 
-    const insertQuery = "INSERT INTO client SET ?";
-    db.query(insertQuery, newUser, (err, result) => {
-      if (err) return res.status(500).json(err);
-      const clientId = result.insertId;
-      return res.status(201).json({ message: "Client created successfully!", clientId });
+    // Create a new client instance
+    const newClient = new Client({
+      name: req.body.Name,
+      email: req.body.Email,
+      password: hash,
     });
-  });
+
+    // Save the new client to the database
+    const savedClient = await newClient.save();
+    return res.status(201).json({ message: "Client created successfully!", clientId: savedClient._id });
+  } catch (err) {
+    return res.status(500).json(err);
+  }
 };
 
       // login user
-export const Login = (req, res) => {
-  const q = "SELECT * FROM client WHERE email = ?";
-  db.query(q, [req.body.email], (err, data) => {
-    if (err) return res.status(500).json(err);
-    if (data.length === 0) return res.status(404).json("User not found!");
+export const Login = async (req, res) => {
+  try {
+    // Find the client by email
+    const client = await Client.findOne({ email: req.body.email });
+    if (!client) {
+      return res.status(404).json("User not found!");
+    }
 
-    const client = data[0];
-    const isPasswordValid = bcrypt.compareSync(req.body.password, user.Password);
-
-    if (!isPasswordValid) return res.status(401).json("Invalid Password!");
+    // Compare the provided password with the stored hashed password
+    const isPasswordValid = bcrypt.compareSync(req.body.password, client.password);
+    if (!isPasswordValid) {
+      return res.status(401).json("Invalid Password!");
+    }
 
     return res.status(200).json({ message: 'Login successful', client });
-  });
+  } catch (err) {
+    return res.status(500).json(err);
+  }
 };
-
+      
