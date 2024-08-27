@@ -35,6 +35,6 @@ reviewsSchema.pre('save', function(next) {
   next();
 });
 
-const Reviews = model('Reviews', reviewsSchema);
+const Review = model('Review', reviewsSchema);  // Updated model name to singular 'Review'
 
-export default Reviews;
+export default Review;

@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-const servicesSchema = new Schema({
+const serviceSchema = new Schema({
   artist: {
     type: Schema.Types.ObjectId,
     ref: 'Artist',
@@ -15,7 +15,7 @@ const servicesSchema = new Schema({
     required: true
   },
   duration: {
-    type: Number, // duration in minutes
+    type: Number,
     required: true
   },
   createdAt: {
@@ -28,11 +28,6 @@ const servicesSchema = new Schema({
   }
 });
 
-servicesSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
-
-const Services = model('Services', servicesSchema);
+const Services = model('Services', serviceSchema);
 
 export default Services;

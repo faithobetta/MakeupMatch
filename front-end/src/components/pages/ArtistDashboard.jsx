@@ -9,11 +9,11 @@ function ArtistDashboard() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [profilePicture, setProfilePicture] = useState(null);
-    const [BrandName, setBrandName] = useState('');
-    const [Address, setAddress] = useState('');
-    const [Location, setLocation] = useState('');
-    const [Services, setServices] = useState([{ Service_name: '', Price: '', Duration: 0 }]);
-    const [ContactNumber, setContactNumber] = useState('');
+    const [brandName, setBrandName] = useState('');
+    const [address, setAddress] = useState('');
+    const [location, setLocation] = useState('');
+    const [services, setServices] = useState([{ serviceName: '', price: '', duration: 0 }]);
+    const [contactNumber, setContactNumber] = useState('');
     const [uploadedFiles, setUploadedFiles] = useState([]);
 
     const handleProfilePictureChange = (e) => {
@@ -21,17 +21,17 @@ function ArtistDashboard() {
     };
 
     const handleServiceChange = (index, field, value) => {
-        const updatedServices = [...Services];
+        const updatedServices = [...services];
         updatedServices[index][field] = value;
         setServices(updatedServices);
     };
 
     const handleAddService = () => {
-        setServices([...Services, { Service_name: '', Price: '', Duration: 0 }]);
+        setServices([...services, { serviceName: '', price: '', duration: 0 }]);
     };
 
     const handleRemoveService = (index) => {
-        const updatedServices = Services.filter((_, i) => i !== index);
+        const updatedServices = services.filter((_, i) => i !== index);
         setServices(updatedServices);
     };
 
@@ -43,35 +43,31 @@ function ArtistDashboard() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Check for any empty fields in services before proceeding
-        const hasEmptyServices = Services.some(service => !service.Service_name || !service.Price || !service.Duration);
+        const hasEmptyServices = services.some(service => !service.serviceName || !service.price || !service.duration);
         if (hasEmptyServices) {
             alert("Please fill out all fields for each service.");
             return;
         }
 
         try {
-            // Upload files to Firebase and get URLs
             const fileUploadPromises = uploadedFiles.map(async (file) => {
                 const storageRef = ref(storage, `images/${file.name}`);
                 await uploadBytes(storageRef, file);
                 return getDownloadURL(storageRef);
             });
 
-            const Fileurl = await Promise.all(fileUploadPromises);
-            console.log(Fileurl);
+            const fileUrl = await Promise.all(fileUploadPromises);
 
-            // Send form data along with file URLs to the backend
             const response = await axios.post("http://localhost:5174/api/auth/artist-dashboard", {
-                Artist_id: id,
-                BrandName,
-                Address,
-                Location,
-                Services,
-                ContactNumber,
-                Fileurl
+                artistId: id,
+                brandName,
+                location,
+                address,
+                contactNumber,
+                fileUrl,
+                services,
             });
-
+                  
             if (response.status === 201) {
                 console.log('Registration successful:', response.data);
                 navigate(`/makeupArtistsProfile/${id}`);
@@ -94,19 +90,32 @@ function ArtistDashboard() {
                 </div>
 
                 <div className="brand-name">
-                    Brand Name:<input className="brandname-input" type="text" value={BrandName} onChange={(e) => setBrandName(e.target.value)} required />
+                    Brand Name:
+                    <input
+                        className="brandname-input"
+                        type="text"
+                        value={brandName}
+                        onChange={(e) => setBrandName(e.target.value)}
+                        required
+                    />
                 </div>
 
                 <div className="address">
-                    Address:<input className="address-input" type="text" value={Address} onChange={(e) => setAddress(e.target.value)} />
+                    Address:
+                    <input
+                        className="address-input"
+                        type="text"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                    />
                 </div>
 
                 <div className="location">
-            
-                    <select className="location-input"  placeholder="Location"
-                        id="location" 
-                        value={Location} 
-                        onChange={(e) => setLocation(e.target.value)} 
+                    <label>Location:</label>
+                    <select
+                        className="location-input"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
                         required
                     >
                         <option value="" disabled>Select a location</option>
@@ -145,40 +154,63 @@ function ArtistDashboard() {
                     </select>
                 </div>
 
-
                 <div className="services">
-                    {Services.map((service, index) => (
+                    {services.map((service, index) => (
                         <div key={index} className="service">
-                            Services:<input className="name-input"
+                            <label>Service Name:</label>
+                            <input
+                                className="name-input"
                                 type="text"
                                 placeholder="Service Name"
-                                value={service.Service_name}
-                                onChange={(e) => handleServiceChange(index, 'Service_name', e.target.value)}
+                                value={service.serviceName}
+                                onChange={(e) => handleServiceChange(index, 'serviceName', e.target.value)}
                                 required
                             />
-                            <input className="price-input"
+                            <label>Price:</label>
+                            <input
+                                className="price-input"
                                 type="text"
                                 placeholder="Price"
-                                value={service.Price}
-                                onChange={(e) => handleServiceChange(index, 'Price', e.target.value)}
+                                value={service.price}
+                                onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
                                 required
                             />
-                            <input className="duration-input"
+                            <label>Duration:</label>
+                            <input
+                                className="duration-input"
                                 type="number"
-                                placeholder="Duration"
-                                value={service.Duration}
-                                onChange={(e) => handleServiceChange(index, 'Duration', e.target.value)}
+                                placeholder="Duration (minutes)"
+                                value={service.duration}
+                                onChange={(e) => handleServiceChange(index, 'duration', e.target.value)}
                                 required
                             />
-                            <button className="remove-button" type="button" onClick={() => handleRemoveService(index)}>Remove</button>
+                            <button
+                                className="remove-button"
+                                type="button"
+                                onClick={() => handleRemoveService(index)}
+                            >
+                                Remove
+                            </button>
                         </div>
                     ))}
-                    <button className="add-service" type="button" onClick={handleAddService}>Add Service</button>
+                    <button
+                        className="add-service"
+                        type="button"
+                        onClick={handleAddService}
+                    >
+                        Add Service
+                    </button>
                 </div>
 
                 <div className="file-upload">
                     <label>Upload Files (Pictures/Videos):</label>
-                    <input className="upload-input" type="file" multiple accept="image/*,video/*" onChange={handleFileUpload} />
+                    <input
+                        className="upload-input"
+                        type="file"
+                        multiple
+                        accept="image/*,video/*"
+                        onChange={handleFileUpload}
+                    />
                     <div className="uploaded-files">
                         {uploadedFiles.map((file, index) => (
                             <div key={index} className="uploaded-file">
@@ -193,7 +225,14 @@ function ArtistDashboard() {
                 </div>
 
                 <div className="contact">
-                    Contact Number:<input className="contact-input" type="text" value={ContactNumber} onChange={(e) => setContactNumber(e.target.value)} required />
+                    Contact Number:
+                    <input
+                        className="contact-input"
+                        type="text"
+                        value={contactNumber}
+                        onChange={(e) => setContactNumber(e.target.value)}
+                        required
+                    />
                 </div>
 
                 <button className="artistDashboardButton" type="submit">Submit</button>

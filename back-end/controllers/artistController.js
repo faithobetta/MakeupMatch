@@ -1,253 +1,195 @@
 import bcrypt from 'bcryptjs';
-import { db } from '../db.js';
+import Artist from '../models/Artist.js';
+import ArtistDashboard from '../models/ArtistDashboard.js';
+import Services from '../models/Services.js';
 
-// signup Artist 
-export const SignUpArtist = (req, res) => {
-  const q = "SELECT * FROM artist WHERE Email = ?";
-  db.query(q, [req.body.Email], (err, data) => {
-    if (err) return res.status(500).json(err);
-    if (data.length) return res.status(409).json("Artist already exists!");
+// Signup Artist 
+export const signUpArtist = async (req, res) => {
+  try {
+    const { email, name, password } = req.body;
 
+    // Check if the artist already exists
+    const existingArtist = await Artist.findOne({ email });
+    if (existingArtist) {
+      return res.status(409).json("Artist already exists!");
+    }
+
+    // Hash the password
     const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(req.body.Password, salt);
-    const newUser = {
-      Name: req.body.Name,
-      Email: req.body.Email,
-      Password: hash,
-    };
+    const hash = bcrypt.hashSync(password, salt);
 
-    const insertQuery = "INSERT INTO artist SET ?";
-    db.query(insertQuery, newUser, (err, result) => {
-      if (err) return res.status(500).json(err);
-      const artistId = result.insertId;
-      return res.status(201).json({ message: "Artist and services created successfully!", artistId });
+    // Create a new artist instance
+    const newArtist = new Artist({
+      name,
+      email,
+      password: hash,
     });
-  });
+
+    // Save the new artist to the database
+    const savedArtist = await newArtist.save();
+    return res.status(201).json({ message: "Artist created successfully!", artistId: savedArtist._id });
+  } catch (err) {
+    return res.status(500).json({ error: "Internal server error", details: err });
+  }
 };
 
-// login user
-export const Login = (req, res) => {
-  const q = "SELECT * FROM artist WHERE Email = ?";
-  db.query(q, [req.body.Email], (err, data) => {
-    if (err) return res.status(500).json(err);
-    if (data.length === 0) return res.status(404).json("User not found!");
+// Login Artist
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-    const client = data[0];
-    const isPasswordValid = bcrypt.compareSync(req.body.Password, client.Password);
+    // Find the artist by email
+    const artist = await Artist.findOne({ email });
+    if (!artist) {
+      return res.status(404).json("User not found!");
+    }
 
-    if (!isPasswordValid) return res.status(401).json("Invalid Password!");
+    // Compare the provided password with the stored hashed password
+    const isPasswordValid = bcrypt.compareSync(password, artist.password);
+    if (!isPasswordValid) {
+      return res.status(401).json("Invalid Password!");
+    }
 
-    return res.status(200).json({ message: 'Login successful', client });
-  });
+    return res.status(200).json({ message: 'Login successful', artist });
+  } catch (err) {
+    return res.status(500).json({ error: "Internal server error", details: err });
+  }
 };
 
-// Artist dashboard 
-export const ArtistDashboard = (req, res) => {
-  // Check if the artist ID is provided
-  const artistId = req.body.Artist_id;
-  if (!artistId) return res.status(400).json("Artist ID is required");
-  
+// Create Artist Dashboard 
+export const createArtistDashboard = async (req, res) => {
+  try {
+    const { artistId, brandName, address, location, contactNumber, fileUrl = [], services } = req.body;
 
-// Create new artist dashboard entry
-const newArtistDashboard = {
-  Artist_id: artistId,
-  BrandName: req.body.BrandName,
-  Address: req.body.Address,
-  Location: req.body.Location,
-  ContactNumber: req.body.ContactNumber,
-  Fileurl: JSON.stringify(req.body.Fileurl) 
-};
+    if (!artistId) return res.status(400).json("Artist ID is required");
 
-  const insertArtistDashboardQuery = `
-    INSERT INTO Artistdashboard (Artist_id,  BrandName, Address, Location, ContactNumber, Fileurl) 
-    VALUES (?, ?, ?, ?, ?, ?)`;
+    // Create a new artist dashboard entry
+    const newArtistDashboard = new ArtistDashboard({
+      artist: artistId,
+      brandName,
+      address,
+      location,
+      contactNumber,
+      fileUrl
+    });
 
-  db.query(insertArtistDashboardQuery, [
-    newArtistDashboard.Artist_id,
-    newArtistDashboard.BrandName,
-    newArtistDashboard.Address,
-    newArtistDashboard.Location,
-    newArtistDashboard.ContactNumber,
-    newArtistDashboard.Fileurl
-  ], (err, result) => {
-    if (err) return res.status(500).json(err);
+    const savedDashboard = await newArtistDashboard.save();
 
     // Insert services if provided
-    if (req.body.Services && req.body.Services.length > 0) {
-      const services = req.body.Services.map(service => [
-        artistId, 
-        service.Service_name, 
-        service.Price, 
-        service.Duration
-      ]);
+    if (services && services.length > 0) {
+      const servicesData = services.map(service => ({
+        artist: artistId,
+        serviceName: service.serviceName,
+        price: service.price,
+        duration: service.duration
+      }));
 
-      const insertServiceQuery = `INSERT INTO Services (Artist_id, Service_name, Price, Duration) VALUES ?`;
-      console.log(services);
+      const savedServices = await Services.insertMany(servicesData);
 
-      db.query(insertServiceQuery, [services], (err, serviceResult) => {
-        if (err) return res.status(500).json(err);
-
-        return res.status(201).json({
-          message: "Artist dashboard and services created successfully!",
-          artistId: artistId
-        });
-      });
-    } else {
-      return res.status(201).json({
-        message: "Artist dashboard created successfully without services!",
-        artistId: artistId
-      });
+      // Update dashboard with the saved services
+      savedDashboard.services = savedServices.map(service => service._id);
+      await savedDashboard.save();
     }
-  });
-};
 
-
-
-export const fetchArtistById = (req, res) => {
-  if (!req.params.id) {
-      return res.status(400).json("ID is required");
+    return res.status(201).json({
+      message: services.length > 0 ? "Artist dashboard and services created successfully!" : "Artist dashboard created successfully without services!",
+      artistId
+    });
+  } catch (err) {
+    return res.status(500).json({ error: "Internal server error", details: err });
   }
-
-  const artistId = req.params.id;
-
-  const query = `
-      SELECT 
-          a.Artist_id, 
-          ad.BrandName, 
-          ad.Address, 
-          ad.Location, 
-          ad.ContactNumber, 
-          ad.Fileurl,
-          a.created_at, 
-          a.updated_at,
-          s.Service_id,
-          s.Service_name, 
-          s.Price, 
-          s.Duration, 
-          s.created_at as service_created_at, 
-          s.updated_at as service_updated_at
-      FROM Artist a
-      LEFT JOIN Artistdashboard ad ON a.Artist_id = ad.Artist_id
-      LEFT JOIN Services s ON a.Artist_id = s.Artist_id
-      WHERE a.Artist_id = ?
-  `;
-
-  db.query(query, [artistId], (err, data) => {
-      if (err) {
-          console.error("Database query error:", err); // Log the error
-          return res.status(500).json(err);
-      }
-      if (data.length === 0) {
-          return res.status(404).json("Artist not found");
-      }
-
-      console.log("Fileurl before parsing:", data[0].Fileurl); // Log Fileurl for debugging
-
-      let fileUrls;
-      try {
-          fileUrls = data[0].Fileurl;
-          console.log(fileUrls)
-      } catch (parseError) {
-          console.error("Error parsing file URLs:", parseError); // Log parsing errors
-          return res.status(500).json("Error parsing file URLs");
-      }
-
-      const artist = {
-          Artist_id: data[0].Artist_id,
-          BrandName: data[0].BrandName,
-          Address: data[0].Address,
-          Location: data[0].Location,
-          ContactNumber: data[0].ContactNumber,
-          Fileurl: fileUrls,
-          created_at: data[0].created_at,
-          updated_at: data[0].updated_at,
-          Services: []
-      };
-
-      data.forEach(row => {
-          if (row.Service_id) {
-              artist.Services.push({
-                  Service_id: row.Service_id,
-                  Service_name: row.Service_name,
-                  Price: row.Price,
-                  Duration: row.Duration,
-                  created_at: row.service_created_at,
-                  updated_at: row.service_updated_at
-              });
-          }
-      });
-
-      return res.status(200).json(artist);
-  });
 };
 
+// Fetch Artist by ID
+export const fetchArtistById = async (req, res) => {
+  try {
+    const artistId = req.params.id;
+    if (!artistId) return res.status(400).json({ error: "ID is required" });
+
+    // Find artist and populate dashboard and services
+    const artist = await Artist.findById(artistId)
+      .populate({
+        path: 'dashboard',
+        populate: {
+          path: 'services',
+          model: 'Services'
+        }
+      })
+      .exec();
+
+    if (!artist) {
+      return res.status(404).json({ error: "Artist not found" });
+    }
+
+    const dashboard = artist.dashboard;
+
+    if (!dashboard) {
+      return res.status(404).json({ error: "Dashboard not found for this artist" });
+    }
+
+    // Prepare artist data for response
+    const artistData = {
+      artistId: artist._id,
+      brandName: dashboard.brandName || '',
+      address: dashboard.address || '',
+      location: dashboard.location || '',
+      contactNumber: dashboard.contactNumber || '',
+      fileUrl: dashboard.fileUrl || [],
+      createdAt: artist.createdAt,
+      updatedAt: artist.updatedAt,
+      services: dashboard.services.map(service => ({
+        serviceId: service._id,
+        serviceName: service.serviceName || '',
+        price: service.price || 0,
+        duration: service.duration || 0,
+        createdAt: service.createdAt,
+        updatedAt: service.updatedAt
+      }))
+    };
+
+    return res.status(200).json(artistData);
+  } catch (err) {
+    console.error("Error fetching artist by ID:", err);
+    return res.status(500).json({ error: "Internal server error", details: err });
+  }
+};
 
 // Fetch artists by location
-export const fetchArtistsByLocation = (req, res) => {
-  const location = req.params.location;
+export const fetchArtistsByLocation = async (req, res) => {
+  try {
+    const location = req.params.location;
+    if (!location) return res.status(400).json("Location is required");
 
-  if (!location) {
-    return res.status(400).json("Location is required");
-  }
+    const artists = await ArtistDashboard.find({ location })
+      .populate('artist')
+      .populate('services')
+      .exec();
 
-  const query = `
-    SELECT 
-      a.Artist_id, 
-      ad.BrandName, 
-      ad.Address, 
-      ad.Location, 
-      ad.ContactNumber, 
-      ad.Fileurl,
-      a.created_at, 
-      a.updated_at,
-      GROUP_CONCAT(
-        JSON_OBJECT(
-          'Service_id', s.Service_id,
-          'Service_name', s.Service_name,
-          'Price', s.Price,
-          'Duration', s.Duration,
-          'created_at', s.created_at,
-          'updated_at', s.updated_at
-        ) ORDER BY s.Service_id
-      ) AS Services
-    FROM Artist a
-    LEFT JOIN Artistdashboard ad ON a.Artist_id = ad.Artist_id
-    LEFT JOIN Services s ON a.Artist_id = s.Artist_id
-    WHERE ad.Location = ?
-    GROUP BY a.Artist_id
-  `;
-
-  db.query(query, [location], (err, data) => {
-    if (err) {
-      return res.status(500).json(err);
-    }
-
-    if (data.length === 0) {
+    if (!artists.length) {
       return res.status(404).json("No artists found in this location");
     }
 
-    const artists = data.map(artist => {
-      let services = [];
-      try {
-        services = artist.Services ? JSON.parse(`[${artist.Services}]`) : [];
-      } catch (parseError) {
-        console.error("Error parsing services JSON:", parseError);
-      }
+    const artistData = artists.map(artistDashboard => ({
+      artistId: artistDashboard.artist._id,
+      brandName: artistDashboard.brandName,
+      address: artistDashboard.address,
+      location: artistDashboard.location,
+      contactNumber: artistDashboard.contactNumber,
+      fileUrl: artistDashboard.fileUrl,
+      createdAt: artistDashboard.artist.createdAt,
+      updatedAt: artistDashboard.artist.updatedAt,
+      services: artistDashboard.services.map(service => ({
+        serviceId: service._id,
+        serviceName: service.serviceName,
+        price: service.price,
+        duration: service.duration,
+        createdAt: service.createdAt,
+        updatedAt: service.updatedAt
+      }))
+    }));
 
-      return {
-        Artist_id: artist.Artist_id,
-        BrandName: artist.BrandName,
-        Address: artist.Address,
-        Location: artist.Location,
-        ContactNumber: artist.ContactNumber,
-        Fileurl: artist.Fileurl,
-        created_at: artist.created_at,
-        updated_at: artist.updated_at,
-        Services: services
-      };
-    });
-
-    return res.status(200).json(artists);
-  });
+    return res.status(200).json(artistData);
+  } catch (err) {
+    return res.status(500).json({ error: "Internal server error", details: err });
+  }
 };
-

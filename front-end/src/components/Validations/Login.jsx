@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import "../CSS-pages/login.css";
@@ -49,7 +49,7 @@ function Login() {
           />
         </div>
         <a className="forgot-link" href="#"> Forgot Password?</a> <br />
-        <button type="submit">Login</button>
+        <button className="login-btn" type="submit">Login</button>
         <p>Don't Have an Account?</p>
         <div className="login-account">
           <Link className="signup" to="/signUpClient">SignUp as Client</Link>

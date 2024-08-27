@@ -39,7 +39,6 @@ body{
 }
 
 .login-input{
-    /* width: 250px; */
     width: 100%;
     max-width: 250px;
     height: 40px;
@@ -57,12 +56,14 @@ body{
     margin-top: 10px;
 }
 .login-container .forgot-link{
-    margin-left: 46%;
+    margin-left: 37%;
     font-size: 1.2rem;
     display: block;
     font-size: 1.2rem;
 }
-.login-container button {
+.login-btn {
+    background-color: var(--textColorWhite);
+    color: var(--textColorBlack);
     display: block;
     width: 150px;
     margin: 5px auto;
@@ -73,7 +74,7 @@ body{
     transition: .5s;
     cursor: pointer;
 }
-.login-container button:hover{
+.login-btn:hover{
     background-color: var(--secondaryColor);
 }
 
@@ -115,7 +116,7 @@ body{
         font-size: 1.5rem;
     }
 
-    .login-container button {
+    .login-container .login-btn {
         width: 50%;
     }
 
@@ -142,7 +143,7 @@ body{
         font-size: 1.2rem;
     }
 
-    .login-container button {
+    .login-container .login-btn {
         padding: 8px;
         font-size: 1.1rem;
     }
@@ -183,7 +184,7 @@ body{
         margin-left: 120px;
     }
 
-    .login-container button {
+    .login-container .login-btn {
         font-size: 1.2rem;
     }
 

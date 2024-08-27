@@ -1,237 +1,162 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
-import axios from "axios";
-import Map from './Map';
-import './MakeupArtistsProfile.css'; // Ensure you have this CSS file
-import './Review.css'; // Ensure you have this CSS file
+Deploying a MERN (MongoDB, Express, React, Node.js) application on Hostinger using SSH involves more direct server interaction. Here’s a step-by-step guide to deploying your app via SSH:
 
-const MakeupArtistsProfile = () => {
-    const navigate = useNavigate();
-    const { id } = useParams();
+### Prerequisites:
+1. *Hostinger Account* with a hosting plan that supports Node.js and SSH access.
+2. *Domain Name* (optional but recommended).
+3. *MongoDB Atlas Account* (or any MongoDB instance).
+4. *SSH Client* (e.g., Terminal on macOS/Linux, PuTTY on Windows).
 
-    const [data, setData] = useState(null);
-    const [imgData, setImgData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [reviews, setReviews] = useState([]);
-    const [reviewsLoading, setReviewsLoading] = useState(true);
-    const [reviewsError, setReviewsError] = useState(null);
-    const [newRating, setNewRating] = useState(1);
-    const [newComment, setNewComment] = useState("");
-    const [postingReview, setPostingReview] = useState(false);
-    const [postReviewError, setPostReviewError] = useState(null);
-    const [latitude, setLatitude] = useState(0);
-    const [longitude, setLongitude] = useState(0);
+### Step 1: Set Up MongoDB
+1. *Create a MongoDB Atlas Account*:
+   - Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+   - Create a new cluster and a database user.
+   - Whitelist your IP address.
+   - Obtain your MongoDB URI (Connection string).
 
-    const locationCoordinates = {
-        barking_dagenham: { lat: 51.5607, lng: 0.1557 },
-        barnet: { lat: 51.6538, lng: -0.2003 },
-        bexley: { lat: 51.4550, lng: 0.1660 },
-        brent: { lat: 51.5588, lng: -0.2817 },
-        bromley: { lat: 51.4050, lng: 0.0146 },
-        camden: { lat: 51.5290, lng: -0.1255 },
-        croydon: { lat: 51.3762, lng: -0.0982 },
-        ealing: { lat: 51.5136, lng: -0.3084 },
-        enfield: { lat: 51.6521, lng: -0.0812 },
-        greenwich: { lat: 51.4821, lng: 0.0057 },
-        hackney: { lat: 51.5450, lng: -0.0550 },
-        hammersmith_fulham: { lat: 51.4927, lng: -0.2334 },
-        haringey: { lat: 51.5908, lng: -0.1098 },
-        harrow: { lat: 51.5792, lng: -0.3330 },
-        havering: { lat: 51.5590, lng: 0.2187 },
-        hillingdon: { lat: 51.5333, lng: -0.4584 },
-        hounslow: { lat: 51.4746, lng: -0.3455 },
-        islington: { lat: 51.5380, lng: -0.1024 },
-        kensington_chelsea: { lat: 51.4975, lng: -0.1940 },
-        kingston_upon_thames: { lat: 51.4123, lng: -0.3007 },
-        lambeth: { lat: 51.4607, lng: -0.1167 },
-        lewisham: { lat: 51.4416, lng: -0.0117 },
-        merton: { lat: 51.4155, lng: -0.1886 },
-        newham: { lat: 51.5076, lng: 0.0460 },
-        redbridge: { lat: 51.5898, lng: 0.0817 },
-        richmond_upon_thames: { lat: 51.4510, lng: -0.3067 },
-        southwark: { lat: 51.5035, lng: -0.0804 },
-        sutton: { lat: 51.3618, lng: -0.1942 },
-        tower_hamlets: { lat: 51.5097, lng: -0.0175 },
-        waltham_forest: { lat: 51.5908, lng: -0.0118 },
-        wandsworth: { lat: 51.4576, lng: -0.1933 },
-        westminster: { lat: 51.4975, lng: -0.1357 },
-    };
-    const fetchArtistById = async () => {
-        try {
-            const response = await axios.get(`http://localhost:5174/api/auth/fetchArtist/${id}`);
-            setData(response.data);
+### Step 2: Prepare Your Application
+1. *Build the React Application*:
+   - In your React project directory, run:
+     bash
+     npm run build
+     
+   - This creates a build folder with the static files of your React app.
 
-            const location = response.data.Location.toLowerCase().replace(' ', '_');
-            if (locationCoordinates[location]) {
-                const { lat, lng } = locationCoordinates[location];
-                setLatitude(lat);
-                setLongitude(lng);
-            } else {
-                console.error("Location not found in the coordinates array");
-            }
+2. *Configure the Node.js/Express Server*:
+   - Ensure your server file (server.js or app.js) serves the React build files. For example:
+     javascript
+     const express = require('express');
+     const path = require('path');
+     const app = express();
 
-            if (response.data.Fileurl) {
-                const correctedUrlString = response.data.Fileurl.trim();
-                try {
-                    const urls = JSON.parse(correctedUrlString);
-                    setImgData(urls);
-                } catch (jsonError) {
-                    console.error("Error parsing Fileurl:", jsonError);
-                    setError("Error processing image URLs.");
-                }
-            }
-        } catch (error) {
-            console.error("Error fetching artist:", error);
-            setError("Error fetching artist data. Please try again later.");
-        } finally {
-            setLoading(false);
-        }
-    };
+     app.use(express.static(path.join(__dirname, 'build')));
 
-    const fetchReviews = async () => {
-        try {
-            const response = await axios.get(`http://localhost:5174/api/review/reviews/${id}`);
-            setReviews(response.data);
-        } catch (error) {
-            console.error("Error fetching reviews:", error);
-            setReviewsError("Error fetching reviews. Please try again later.");
-        } finally {
-            setReviewsLoading(false);
-        }
-    };
+     app.get('/*', (req, res) => {
+       res.sendFile(path.join(__dirname, 'build', 'index.html'));
+     });
 
-    const handlePostReview = async (e) => {
-        e.preventDefault();
-        setPostingReview(true);
-        setPostReviewError(null);
+     const port = process.env.PORT || 5000;
+     app.listen(port, () => {
+       console.log(`Server running on port ${port}`);
+     });
+     
 
-        try {
-            const response = await axios.post(`http://localhost:5174/api/review/post-review`, {
-                Artist_id: id,
-                Client_id: 1, // Adjust as needed for client authentication
-                Rating: newRating,
-                Comment: newComment,
-            });
+3. *Update Environment Variables*:
+   - Ensure your MongoDB URI and other environment variables are correctly set up in your server.js or .env file.
 
-            setReviews((prevReviews) => [...prevReviews, response.data]);
-            setNewRating(1);
-            setNewComment("");
-        } catch (error) {
-            console.error("Error posting review:", error);
-            setPostReviewError("Error posting review. Please try again later.");
-        } finally {
-            setPostingReview(false);
-        }
-    };
+### Step 3: SSH into Your Hostinger Server
+1. *Obtain SSH Access Details*:
+   - In the Hostinger dashboard, go to *Hosting* > *Manage* > *SSH Access* to get your SSH username, password, and server IP.
 
-    useEffect(() => {
-        fetchArtistById();
-        fetchReviews();
-    }, [id]);
+2. *Connect via SSH*:
+   - Open your terminal (macOS/Linux) or PuTTY (Windows).
+   - Connect to your server using the following command:
+     bash
+     ssh username@server_ip
+     
+   - Replace username with your SSH username and server_ip with your server's IP address.
 
-    const Review = ({ review }) => {
-        return (
-            <div className="review">
-                <p><strong>Rating:</strong> {review.Rating} / 5</p>
-                <p><strong>Comment:</strong> {review.Comment}</p>
-            </div>
-        );
-    };
+   - Enter your password when prompted.
 
-    return (
-        <div className="makeup-artists-profile">
-            <h1>Makeup Artist Profile</h1>
-            {loading ? (
-                <p>Loading...</p>
-            ) : error ? (
-                <p>{error}</p>
-            ) : data ? (
-                <>
-                    {imgData.length > 0 && <img className="profile-img" src={imgData[0]} alt="Profile" />}
-                    <h2>{data.BrandName}</h2>
-                    <div className="div-address">
-                        <p>{data.Address}</p>
-                    </div>
-                    <div className="div-service">
-                        <h3>Services We Offer</h3>
-                        <ul>
-                            {data.Services?.map((service) => (
-                                <li key={service.Service_id} className="service-item">
-                                    {service.Service_name}: £{service.Price} for {service.Duration} minutes
-                                    <button className="book" onClick={() => navigate('/booking')}>Book service</button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    <div className="work-pictures">
-                        <h3>Pictures and Videos of Our Work</h3>
-                        <div className="grid-layout">
-                            {imgData.map((url, index) => (
-                                <div key={index} className="grid-item">
-                                    <img src={url} alt={`Upload ${index}`} width="500" height="400" />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="div-contact">
-                        <h3>Contact Number</h3>
-                        <p>{data.ContactNumber}</p>
-                    </div>
+### Step 4: Set Up the Node.js Environment on Hostinger
+1. *Navigate to the Public HTML Directory*:
+   bash
+   cd ~/public_html
+   
 
-                    <div className="reviews-section">
-                        <h2>Reviews</h2>
-                        {reviewsLoading ? (
-                            <p>Loading reviews...</p>
-                        ) : reviewsError ? (
-                            <p>{reviewsError}</p>
-                        ) : reviews.length > 0 ? (
-                            reviews.map((review) => (
-                                <Review key={review.id} review={review} />
-                            ))
-                        ) : (
-                            <p>No reviews yet.</p>
-                        )}
+2. *Clone Your Repository or Upload Files*:
+   - If your project is on GitHub or another Git repository, clone it:
+     bash
+     git clone https://github.com/yourusername/yourrepository.git
+     
+   - If you need to upload files manually, use an FTP client to upload your project files to the public_html directory.
 
-                        <div className="add">
-                            <h3>Add a Review</h3>
-                            <form className="addForm" onSubmit={handlePostReview}>
-                                <input
-                                    type="text"
-                                    placeholder="Write your opinion"
-                                    value={newComment}
-                                    onChange={(e) => setNewComment(e.target.value)}
-                                    required
-                                />
-                                <select
-                                    value={newRating}
-                                    onChange={(e) => setNewRating(parseInt(e.target.value))}
-                                    required
-                                >
-                                    {[1, 2, 3, 4, 5].map((rating) => (
-                                        <option key={rating} value={rating}>
-                                            {rating}
-                                        </option>
-                                    ))}
-                                </select>
-                                <button type="submit" disabled={postingReview}>
-                                    {postingReview ? 'Sending...' : 'Send'}
-                                </button>
-                                {postReviewError && <p className="error">{postReviewError}</p>}
-                            </form>
-                        </div>
-                    </div>
+3. *Install Dependencies*:
+   - Navigate to your project directory:
+     bash
+     cd yourrepository
+     
+   - Install Node.js dependencies:
+     bash
+     npm install
+     
 
-                    <div className="map-container">
-                        <h3>Location</h3>
-                        <Map latitude={latitude} longitude={longitude} />
-                    </div>
-                </>
-            ) : (
-                <p>Artist not found.</p>
-            )}
-        </div>
-    );
-};
+### Step 5: Configure Environment Variables and Start the Application
+1. *Set Up Environment Variables*:
+   - You can create a .env file in your project directory or export variables directly in the terminal:
+     bash
+     export MONGODB_URI='your_mongodb_uri'
+     export PORT=3000
+     
 
-export default MakeupArtistsProfile;
+2. *Start the Application*:
+   - You can use a process manager like PM2 (recommended) or simply run the server with Node.js:
+     bash
+     npm install -g pm2
+     pm2 start server.js --name "myapp"
+     
+   - This will keep your app running in the background.
+
+   - To make sure PM2 starts your app on server boot, run:
+     bash
+     pm2 startup
+     pm2 save
+     
+
+### Step 6: Configure the Domain/Subdomain (Optional)
+1. *Set Up Domain/Subdomain*:
+   - In the Hostinger dashboard, go to *Domains* and set your domain or subdomain to point to your application.
+
+2. *Edit the Nginx Configuration (if needed)*:
+   - If you need to set up a reverse proxy or make custom changes, you may need to edit the Nginx configuration file:
+     bash
+     sudo nano /etc/nginx/sites-available/default
+     
+   - Make the necessary changes and restart Nginx:
+     bash
+     sudo systemctl restart nginx
+     
+
+### Step 7: Configure SSL (Optional but Recommended)
+1. *Install Certbot*:
+   - Install Certbot to enable HTTPS with Let’s Encrypt:
+     bash
+     sudo apt-get install certbot python3-certbot-nginx
+     
+
+2. *Obtain and Install SSL Certificate*:
+   - Run Certbot:
+     bash
+     sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+     
+
+3. *Auto-Renew SSL*:
+   - Set up a cron job for automatic SSL renewal:
+     bash
+     sudo crontab -e
+     
+   - Add the following line:
+     bash
+     0 0 * * * /usr/bin/certbot renew --quiet
+     
+
+### Step 8: Monitor and Maintain Your Application
+1. *Check Application Logs*:
+   - Use PM2 to check logs and monitor the app:
+     bash
+     pm2 logs
+     
+
+2. *Update Application*:
+   - To deploy updates, you can pull the latest changes from your Git repository, install any new dependencies, and restart PM2:
+     bash
+     git pull origin main
+     npm install
+     pm2 restart myapp
+     
+
+### Final Notes:
+- *Database Security*: Ensure that your MongoDB instance is secure, with IP whitelisting and strong passwords.
+- *Performance Optimization*: Consider using a CDN for your React app, optimizing images, and enabling Gzip compression.
+- *Backup*: Regularly back up your application and database.
+
+Following these steps should get your MERN application up and running on Hostinger using SSH!

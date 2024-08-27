@@ -1,15 +1,15 @@
 import express from 'express';
 import { SignUpClient, Login } from '../controllers/authController.js';
-import { fetchArtistById, fetchArtistsByLocation, SignUpArtist } from '../controllers/artistController.js';
-import { ArtistDashboard } from '../controllers/artistController.js';
+import { createArtistDashboard, fetchArtistById, fetchArtistsByLocation, signUpArtist } from '../controllers/artistController.js';
+
 
 const router = express.Router();
 
-router.post('/signUpArtist', SignUpArtist);
+router.post('/signUpArtist', signUpArtist);
 router.post('/signUpClient', SignUpClient);
 router.post('/login', Login);
 router.get('/fetchArtist/:id', fetchArtistById);
 router.get('/fetchArtistsByLocation/:location', fetchArtistsByLocation);
-router.post('/artist-dashboard', ArtistDashboard);
+router.post('/artist-dashboard', createArtistDashboard);
 
 export default router;

@@ -57,15 +57,15 @@ const MakeupArtistsProfile = () => {
     wandsworth: { lat: 51.4576, lng: -0.1933 },
     westminster: { lat: 51.4975, lng: -0.1357 },
   };
+
   const fetchArtistById = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:5174/api/auth/fetchArtist/${id}`
-      );
+      const response = await axios.get(`http://localhost:5174/api/auth/fetchArtist/${id}`);
       setData(response.data);
 
-      const location = response.data.Location.toLowerCase().replace(" ", "_");
-      if (locationCoordinates[location]) {
+      // Handle location to coordinates mapping
+      const location = response.data.location?.toLowerCase().replace(" ", "_");
+      if (location && locationCoordinates[location]) {
         const { lat, lng } = locationCoordinates[location];
         setLatitude(lat);
         setLongitude(lng);
@@ -73,15 +73,20 @@ const MakeupArtistsProfile = () => {
         console.error("Location not found in the coordinates array");
       }
 
-      if (response.data.Fileurl) {
-        const correctedUrlString = response.data.Fileurl.trim();
+      // Handle fileUrl parsing
+      if (typeof response.data.fileUrl === 'string') {
         try {
-          const urls = JSON.parse(correctedUrlString);
+          const urls = JSON.parse(response.data.fileUrl.trim());
           setImgData(urls);
         } catch (jsonError) {
-          console.error("Error parsing Fileurl:", jsonError);
+          console.error("Error parsing fileUrl:", jsonError);
           setError("Error processing image URLs.");
         }
+      } else if (Array.isArray(response.data.fileUrl)) {
+        setImgData(response.data.fileUrl); // Assuming it's already an array of URLs
+      } else {
+        console.error("Unexpected fileUrl format:", response.data.fileUrl);
+        setError("Unexpected format of image URLs.");
       }
     } catch (error) {
       console.error("Error fetching artist:", error);
@@ -93,13 +98,11 @@ const MakeupArtistsProfile = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:5174/api/review/reviews/${id}`
-      );
+      const response = await axios.get(`http://localhost:5174/api/review/reviews/${id}`);
       setReviews(response.data);
     } catch (error) {
       console.error("Error fetching reviews:", error);
-      setReviewsError("Error fetching reviews. Please try again later.");
+      setReviewsError("No review yet.");
     } finally {
       setReviewsLoading(false);
     }
@@ -111,22 +114,23 @@ const MakeupArtistsProfile = () => {
     setPostReviewError(null);
 
     try {
+      const clientx =  sessionStorage.getItem('clientId')
       const response = await axios.post(
         `http://localhost:5174/api/review/post-review`,
         {
-          Artist_id: id,
-          Client_id: 1, 
-          Rating: newRating,
-          Comment: newComment,
+          artist: id,
+          client: clientx,
+          rating: newRating,
+          comment: newComment,
         }
       );
 
-      setReviews((prevReviews) => [...prevReviews, response.data]);
+      setReviews((prevReviews) => [...prevReviews, response.data.review]);
       setNewRating(1);
       setNewComment("");
     } catch (error) {
       console.error("Error posting review:", error);
-      setPostReviewError("Error posting review. Please try again later.");
+      setPostReviewError("No review yet");
     } finally {
       setPostingReview(false);
     }
@@ -141,14 +145,14 @@ const MakeupArtistsProfile = () => {
     return (
       <div className="review">
         <div className="rating">
-          {Array(review.Rating)
+          {Array(review.rating)
             .fill()
-            .map((item, i) => (
+            .map((_, i) => (
               <img src="/star.png" alt="Star" key={i} />
             ))}
         </div>
         <p>
-          <strong>Comment:</strong> {review.Comment}
+          <strong>Comment:</strong> {review.comment}
         </p>
       </div>
     );
@@ -168,66 +172,72 @@ const MakeupArtistsProfile = () => {
           )}
 
           <div className="profile-brandname">
-          <h2>{data.BrandName}</h2>
+            <h2>{data.brandName || "No Brand Name Provided"}</h2>
           </div>
-          
+
           <div className="div-address">
-            <p>{data.Address}</p>
+            <p>{data.address || "No Address Provided"}</p>
           </div>
 
           <div className="div-service">
             <h3>Services We Offer</h3>
             <ul>
-              {data.Services?.map((service) => (
-                <li key={service.Service_id} className="service-item">
-                  {service.Service_name}: £{service.Price} for{" "}
-                  {service.Duration} minutes
-                  <button
-                    className="book"
-                    onClick={() =>
-                      navigate("/booking", {
-                        state: { artistData: data, service: service },
-                      })
-                    }
-                  >
-                    Book service
-                  </button>
-                </li>
-              ))}
+              {data.services?.length > 0 ? (
+                data.services.map((service) => (
+                  <li key={service.serviceId} className="service-item">
+                    {service.serviceName || "No Service Name"}: £{service.price || "N/A"} for {service.duration || "N/A"} minutes
+                    <button
+                      className="book"
+                      onClick={() =>
+                        navigate("/booking", {
+                          state: { artistData: data, service: service },
+                        })
+                      }
+                    >
+                      Book service
+                    </button>
+                  </li>
+                ))
+              ) : (
+                <li>No services available.</li>
+              )}
             </ul>
           </div>
+
           <div className="work-pictures">
             <h3>Pictures and Videos of Our Work</h3>
             <div className="grid-layout">
-              {imgData.map((url, index) => (
-                <div key={index} className="grid-item">
-                  <img className="work-img"
-                    src={url}
-                    alt={`Upload ${index}`}
-                    
-                  />
-                </div>
-              ))}
+              {imgData.length > 0 ? (
+                imgData.map((url, index) => (
+                  <div key={index} className="grid-item">
+                    <img className="work-img" src={url} alt={`Upload ${index}`} />
+                  </div>
+                ))
+              ) : (
+                <p>No work pictures available.</p>
+              )}
             </div>
           </div>
+
           <div className="div-contact">
             <h3>Contact Number</h3>
-            <p>{data.ContactNumber}</p>
+            <p>{data.contactNumber || "No Contact Number Provided"}</p>
           </div>
 
           <div className="reviews-section">
-
             <div className="add-review">
               <h3>Add a Review</h3>
               <form className="addForm" onSubmit={handlePostReview}>
-                <input className="comment-input"
+                <input
+                  className="comment-input"
                   type="text"
                   placeholder="Write your opinion"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   required
                 />
-                <select className="rating-div"
+                <select
+                  className="rating-div"
                   value={newRating}
                   onChange={(e) => setNewRating(parseInt(e.target.value))}
                   required
@@ -239,11 +249,11 @@ const MakeupArtistsProfile = () => {
                   ))}
                 </select>
                 <button className="review-submit" type="submit" disabled={postingReview}>
-                  {postingReview ? "Sending..." : "Submit Review "}
+                  {postingReview ? "Sending..." : "Submit Review"}
                 </button>
                 {postReviewError && <p className="error">{postReviewError}</p>}
               </form>
-              </div>
+            </div>
 
             <h2>Reviews</h2>
             {reviewsLoading ? (
@@ -252,13 +262,11 @@ const MakeupArtistsProfile = () => {
               <p>{reviewsError}</p>
             ) : reviews.length > 0 ? (
               reviews.map((review) => (
-                <Review key={review.id} review={review} />
+                <Review key={review._id} review={review} />
               ))
             ) : (
               <p>No reviews yet.</p>
             )}
-
-
           </div>
 
           <div className="map-container">

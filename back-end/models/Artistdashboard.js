@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 
-const artistdashboardSchema = new Schema({
+// Define the ArtistDashboard schema
+const artistDashboardSchema = new Schema({
   artist: {
     type: Schema.Types.ObjectId,
     ref: 'Artist',
@@ -19,7 +20,7 @@ const artistdashboardSchema = new Schema({
     required: true
   },
   fileUrl: {
-    type: String,
+    type: [String], 
     required: true
   },
   contactNumber: {
@@ -32,14 +33,31 @@ const artistdashboardSchema = new Schema({
   updatedAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  // Array of references to Services
+  services: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Services'
+  }]
 });
 
-artistdashboardSchema.pre('save', function(next) {
+// Update the updatedAt field before saving
+artistDashboardSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
   next();
 });
 
-const Artistdashboard = model('Artistdashboard', artistdashboardSchema);
+// After saving the dashboard, update the corresponding artist's dashboard reference
+artistDashboardSchema.post('save', async function(doc, next) {
+  try {
+    await model('Artist').findByIdAndUpdate(doc.artist, { dashboard: doc._id });
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
-export default Artistdashboard;
+// Export the ArtistDashboard model
+const ArtistDashboard = model('ArtistDashboard', artistDashboardSchema);
+
+export default ArtistDashboard;
