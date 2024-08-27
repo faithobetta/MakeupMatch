@@ -22,6 +22,7 @@ const MakeupArtistsProfile = () => {
   const [postReviewError, setPostReviewError] = useState(null);
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
+  const backend =import.meta.env.VITE_BACKEND_URL
 
   const locationCoordinates = {
     barking_dagenham: { lat: 51.5607, lng: 0.1557 },
@@ -60,7 +61,7 @@ const MakeupArtistsProfile = () => {
 
   const fetchArtistById = async () => {
     try {
-      const response = await axios.get(`http://localhost:5174/api/auth/fetchArtist/${id}`);
+      const response = await axios.get(`${backend}/api/auth/fetchArtist/${id}`);
       setData(response.data);
 
       // Handle location to coordinates mapping
@@ -98,7 +99,7 @@ const MakeupArtistsProfile = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await axios.get(`http://localhost:5174/api/review/reviews/${id}`);
+      const response = await axios.get(`${backend}/api/review/reviews/${id}`);
       setReviews(response.data);
     } catch (error) {
       console.error("Error fetching reviews:", error);
@@ -116,7 +117,7 @@ const MakeupArtistsProfile = () => {
     try {
       const clientx =  sessionStorage.getItem('clientId')
       const response = await axios.post(
-        `http://localhost:5174/api/review/post-review`,
+        `${backend}/api/review/post-review`,
         {
           artist: id,
           client: clientx,

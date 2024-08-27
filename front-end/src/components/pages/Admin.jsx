@@ -5,12 +5,13 @@ import axios from 'axios';
 const Admin = () => {
   const [appointments, setAppointments] = useState([]);
   const [error, setError] = useState(null);
+  const backend =import.meta.env.VITE_BACKEND_URL
 
   useEffect(() => {
     // Fetch all appointments on component mount
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get('http://localhost:5174/api/appointment/appointments'); // Make sure this endpoint matches your backend
+        const response = await axios.get('${backend}/api/appointment/appointments'); // Make sure this endpoint matches your backend
         setAppointments(response.data);
       } catch (err) {
         setError(err.message);
@@ -22,7 +23,7 @@ const Admin = () => {
 
   const handleCancel = async (bookingId) => {
     try {
-      await axios.delete(`http://localhost:5174/api/appointment/appointments/${bookingId}`); // Make sure this endpoint matches your backend
+      await axios.delete(`${backend}/api/appointment/appointments/${bookingId}`); // Make sure this endpoint matches your backend
       setAppointments(appointments.filter(appt => appt.Booking_id !== bookingId));
     } catch (err) {
       setError(err.message);

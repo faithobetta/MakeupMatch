@@ -7,6 +7,7 @@ import axios from "axios";
 
 function SignUpClient() {
   const navigate = useNavigate();
+  const backend =import.meta.env.VITE_BACKEND_URL
 
   const UserSchema = yup.object().shape({
     Name: yup.string().required("Name is Required!"),
@@ -21,7 +22,7 @@ function SignUpClient() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('http://localhost:5174/api/auth/signUpClient', data);
+      const response = await axios.post(`${backend}/api/auth/signUpClient`+, data);
       if (response.status === 201) {
         navigate(`/`);
         sessionStorage.setItem('clientId', response.data.clientId);

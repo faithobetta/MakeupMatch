@@ -7,6 +7,7 @@ import axios from "axios";
 
 function SignUpArtist() {
   const navigate = useNavigate();
+  const backend =import.meta.env.VITE_BACKEND_URL
 
   // Update schema to match field names
   const UserSchema = yup.object().shape({
@@ -26,7 +27,7 @@ function SignUpArtist() {
     console.log(data);
     try {
       // Adjusted the API request to use the provided field names
-      const response = await axios.post('http://localhost:5174/api/auth/signUpArtist', {
+      const response = await axios.post(`${backend}/api/auth/signUpArtist`, {
         name: data.name,
         email: data.email,
         password: data.password,

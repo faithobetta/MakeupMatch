@@ -7,11 +7,11 @@ const Artist = () => {
   const [artists, setArtists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const backend =import.meta.env.VITE_BACKEND_URL
   useEffect(() => {
     const fetchArtists = async () => {
       try {
-        const response = await fetch(`http://localhost:5174/api/auth/fetchArtistsByLocation/${location}`);
+        const response = await fetch(`${backend}/api/auth/fetchArtistsByLocation/${location}`);
         if (!response.ok) {
           throw new Error('Failed to fetch artists');
         }

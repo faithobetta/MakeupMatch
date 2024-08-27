@@ -18,11 +18,12 @@ const Booking = () => {
     const [bookedServices, setBookedServices] = useState([service || {}]);
     const [comment, setComment] = useState("");
     const client = sessionStorage.getItem('clientId');
+    const backend =import.meta.env.VITE_BACKEND_URL
 
     useEffect(() => {
         if (serviceIdx && !bookedServices.some(s => s.serviceIdx === parseInt(serviceIdx))) {
             // Fetch service details from backend if needed
-            axios.get(`http://localhost:5174/api/services/${serviceIdx}`).then(response => {
+            axios.get(`${backend}/api/services/${serviceIdx}`).then(response => {
                 setBookedServices(prevServices => [...prevServices, response.data]);
             }).catch(error => {
                 console.error("Error fetching service details:", error);
@@ -50,7 +51,7 @@ const Booking = () => {
             comment: comment,
         });
         try {
-            const response = await axios.post('http://localhost:5174/api/appointment/booking', bookingData);
+            const response = await axios.post(`${backend}/api/appointment/booking`, bookingData);
             console.log("Booking response:", response.data);
             const currency = '£';
             const totalAmount =service?.price

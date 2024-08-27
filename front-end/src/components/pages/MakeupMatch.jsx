@@ -7,6 +7,7 @@ import Search from './Search';
 import pexels1 from './pexels1.webp';
 
 
+
 // import Search from './Search';
 
 // const artistsData = [

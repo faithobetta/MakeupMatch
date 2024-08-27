@@ -15,6 +15,7 @@ function ArtistDashboard() {
     const [services, setServices] = useState([{ serviceName: '', price: '', duration: 0 }]);
     const [contactNumber, setContactNumber] = useState('');
     const [uploadedFiles, setUploadedFiles] = useState([]);
+    const backend =import.meta.env.VITE_BACKEND_URL
 
     const handleProfilePictureChange = (e) => {
         setProfilePicture(URL.createObjectURL(e.target.files[0]));
@@ -58,7 +59,7 @@ function ArtistDashboard() {
 
             const fileUrl = await Promise.all(fileUploadPromises);
 
-            const response = await axios.post("http://localhost:5174/api/auth/artist-dashboard", {
+            const response = await axios.post(`${backend}/api/auth/artist-dashboard`, {
                 artistId: id,
                 brandName,
                 location,

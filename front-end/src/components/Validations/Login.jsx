@@ -7,12 +7,12 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
+  const backend =import.meta.env.VITE_BACKEND_URL
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5174/api/auth/login', { email, password });
+      const response = await axios.post(`${backend}/api/auth/login`, { email, password });
       if (response.status === 200) {
         console.log('Login successful:', response.data);
         navigate('/artist-dashboard'); // Navigate to the artist dashboard or any other route
