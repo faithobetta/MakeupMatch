@@ -34,14 +34,12 @@ app.use(
   })
 );
 
-app.use('/api/auth', authRoutes);
-app.use('/api/appointment', appointmentRoutes);
-app.use('/api/review', reviewRoutes);
+// Serve static files from the dist directory
+app.use(express.static(path.join(__dirname, 'front-end', 'dist')));
 
-app.use(express.static(path.join(__dirname, 'build')));
-
+// Send all other requests to the React app
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', '../front-end/index.html'));
+  res.sendFile(path.join(__dirname, 'front-end', 'dist', 'index.html'));
 });
 
 app.get('/api/test', (req, res) => {
